@@ -148,15 +148,13 @@ async function loadSlots() {
       .filter(s => {
         const d = parseDate(s.date);
         if (!d || d < today) return false; // --- Hide past dates ---
-        // --- If today, check if time has passed ---
+        // --- If today, check if time has passed (local time) ---
         if (d.getTime() === today.getTime()) {
           const timeParts = s.time.match(/^(\d{1,2})h(\d{0,2})/);
           if (timeParts) {
-            const slotHour = parseInt(timeParts[1]);
-            const slotMin  = parseInt(timeParts[2] || 0);
-            const slotDate = new Date(d);
-            slotDate.setHours(slotHour, slotMin, 0, 0);
-            if (slotDate <= now) return false; // --- Hide past times today ---
+            const slotMins = parseInt(timeParts[1]) * 60 + parseInt(timeParts[2] || 0);
+            const nowMins  = now.getHours() * 60 + now.getMinutes();
+            if (slotMins <= nowMins) return false;
           }
         }
         return true;
@@ -548,8 +546,9 @@ async function saveEditSlot(oldId) {
   }
   if (selectedDate.getTime() === today.getTime()) {
     const [hh, mm] = timeVal.split(':').map(Number);
-    const slotTime = new Date(); slotTime.setHours(hh, mm, 0, 0);
-    if (slotTime <= now) {
+    const slotMins = hh * 60 + mm;
+    const nowMins  = now.getHours() * 60 + now.getMinutes();
+    if (slotMins <= nowMins) {
       alert('Este horário já passou hoje. Escolha um horário futuro.');
       return;
     }
@@ -691,11 +690,14 @@ async function addSlot() {
     showMsg(msgEl, 'error', 'Não é possível adicionar horários em datas passadas.');
     return;
   }
-  // --- If today, check time hasn't passed ---
+  // --- If today, check time hasn't passed (using local time) ---
   if (selectedDate.getTime() === today.getTime()) {
-    const [hh, mm]  = timeVal.split(':').map(Number);
-    const slotTime  = new Date(); slotTime.setHours(hh, mm, 0, 0);
-    if (slotTime <= now) {
+    const [hh, mm]   = timeVal.split(':').map(Number);
+    const nowHour    = now.getHours();
+    const nowMin     = now.getMinutes();
+    const slotMins   = hh * 60 + mm;
+    const nowMins    = nowHour * 60 + nowMin;
+    if (slotMins <= nowMins) {
       showMsg(msgEl, 'error', 'Este horário já passou hoje. Escolha um horário futuro.');
       return;
     }
