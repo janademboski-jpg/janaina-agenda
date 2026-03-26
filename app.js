@@ -1,5 +1,5 @@
 // --- Config ---
-const API_URL        = 'https://script.google.com/macros/s/AKfycbz6ZMwQclyfWQAon4Isp9RoLQB70CYhVwNDAZCSfmm3a6oRONcB5mtzabxJZ_2h4op2/exec';
+const API_URL        = 'https://script.google.com/macros/s/AKfycbzF7kvk7e9uGkCN02T_eGnJEwq85C5xvDpzFggRh-HrOpnaL0RpW7TN6h0tNB9hjbMQ0w/exec';
 const CALLMEBOT_PHONE = '5561992849023'; // Janaína's WhatsApp number (with country code, no +)
 const CALLMEBOT_KEY   = 'YOUR_CALLMEBOT_KEY'; // Replace with her CallMeBot API key
 
