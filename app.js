@@ -1,5 +1,5 @@
 // --- Config ---
-const API_URL = 'https://script.google.com/macros/s/AKfycbx_RVF-_Gz1D6aYLd54aVnuVtYea4DMtgqHaZnpOcdBPd_tpAnA33sifXjyFR24cBAR2g/exec';
+const API_URL = 'https://script.google.com/macros/s/AKfycbwzrp5sEg1Sy_6AfftIwUuYdGwqfQxZeroxSZg3XF9GBr6BuuQAjVtqRo-7tHEuEv92TQ/exec';
 
 // --- State ---
 let slots        = [];
