@@ -190,6 +190,7 @@ body::before {
   text-transform: uppercase;
   color         : var(--muted);
   margin-bottom : 12px;
+  opacity       : 0.75;
   transition    : color 0.3s;
 }
 
@@ -373,7 +374,7 @@ body::before {
   background   : var(--surface);
   cursor       : pointer;
   text-align   : center;
-  transition   : all 0.18s ease;
+  transition   : all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
   font-family  : 'Inter', sans-serif;
 }
 
