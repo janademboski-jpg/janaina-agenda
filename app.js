@@ -222,12 +222,13 @@ function renderCalendar() {
       const dayLabel = DAY_SHORT[dow];
       const dateNum  = cellDate.getDate();
       const monthStr = MONTHS_SHORT[cellDate.getMonth()];
-
       if (daySlots.length) {
         html += `<div class="day-cell has-slots">
-          <div class="day-name">${dayLabel}</div>
-          <div class="day-date-num">${dateNum}</div>
-          <div class="day-month">${monthStr}</div>`;
+          <div class="day-info">
+            <div class="day-name">${dayLabel}</div>
+            <div class="day-date-num">${dateNum}</div>
+            <div class="day-month">${monthStr}</div>
+          </div>`;
 
         daySlots.forEach(slot => {
           const isBooked   = slot.status === 'booked';
@@ -244,9 +245,11 @@ function renderCalendar() {
         html += `</div>`;
       } else {
         html += `<div class="day-cell empty">
-          <div class="day-name">${dayLabel}</div>
-          <div class="day-date-num">${dateNum}</div>
-          <div class="day-month">${monthStr}</div>
+          <div class="day-info">
+            <div class="day-name">${dayLabel}</div>
+            <div class="day-date-num">${dateNum}</div>
+            <div class="day-month">${monthStr}</div>
+          </div>
         </div>`;
       }
     });

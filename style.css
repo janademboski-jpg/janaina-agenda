@@ -219,7 +219,6 @@ body::before {
 .header h1 em {
   font-style: normal;
   color     : var(--purple);
-  display   : block;
 }
 
 .divider {
@@ -331,32 +330,35 @@ body::before {
   opacity: 0.5;
 }
 
+.day-info {
+  text-align   : center;
+  margin-bottom: 15px;
+  width        : 100%;
+}
+
 .day-name {
   font-size     : 10px;
   font-weight   : 600;
   letter-spacing: 0.1em;
   text-transform: uppercase;
   color         : var(--muted);
-  margin-bottom : 4px;
   transition    : color 0.3s;
 }
 
 .day-date-num {
-  font-family  : 'Playfair Display', serif;
-  font-size    : 1.4rem;
-  font-weight  : 400;
-  color        : var(--text);
-  line-height  : 1;
-  margin-bottom: 2px;
-  transition   : color 0.3s;
+  font-family: 'Playfair Display', serif;
+  font-size  : 1.4rem;
+  font-weight: 400;
+  color      : var(--text);
+  line-height: 1.1;
+  transition : color 0.3s;
 }
 
 .day-month {
-  font-size    : 11px;
-  color        : var(--text-2);
-  font-weight  : 400;
-  margin-bottom: 8px;
-  transition   : color 0.3s;
+  font-size  : 11px;
+  color      : var(--text-2);
+  font-weight: 400;
+  transition : color 0.3s;
 }
 
 /* ============================================================
