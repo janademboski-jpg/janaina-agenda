@@ -263,9 +263,14 @@ function renderCalendar() {
           const cls        = isBooked ? 'booked' : isSelected ? 'selected' : 'available';
           const statusTxt  = isBooked ? 'Reservado' : isSelected ? 'Selecionado' : 'Livre';
           const click      = isBooked ? '' : `onclick="selectSlot('${slot.id}')"`;
-          html += `<button class="slot-btn ${cls}" ${click}>
-            <span class="slot-time-label">${slot.time}</span>
-            <span class="slot-status-label">${statusTxt}</span>
+          const ariaLabel = isBooked
+            ? `Horário ${slot.time} — Reservado`
+            : isSelected
+              ? `Horário ${slot.time} — Selecionado`
+              : `Selecionar horário ${slot.time}`;
+          html += `<button class="slot-btn ${cls}" ${click} aria-label="${ariaLabel}" ${isBooked ? 'aria-disabled="true"' : ''}>
+            <span class="slot-time-label" aria-hidden="true">${slot.time}</span>
+            <span class="slot-status-label" aria-hidden="true">${statusTxt}</span>
           </button>`;
         });
 
@@ -411,9 +416,13 @@ async function submitBooking() {
 
 // --- Admin ---
 function toggleAdmin() {
-  const panel = document.getElementById('adminPanel');
+  const panel  = document.getElementById('adminPanel');
+  const btn    = document.querySelector('.btn-admin');
   panel.classList.toggle('open');
   const isOpen = panel.classList.contains('open');
+
+  // --- Update aria-expanded ---
+  if (btn) btn.setAttribute('aria-expanded', isOpen);
 
   // --- Fix 3: Save open state ---
   sessionStorage.setItem('jana-admin-open', isOpen);
