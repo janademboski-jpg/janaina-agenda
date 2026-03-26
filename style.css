@@ -523,6 +523,53 @@ body::before {
   opacity: 0.6;
 }
 
+.required {
+  color      : var(--error);
+  font-weight: 500;
+  margin-left: 2px;
+}
+
+.optional {
+  color         : var(--muted);
+  font-weight   : 300;
+  font-size     : 10px;
+  letter-spacing: 0.05em;
+  text-transform: none;
+  margin-left   : 3px;
+  opacity       : 0.8;
+}
+
+.field-full {
+  margin-bottom: 16px;
+}
+
+.field-full textarea {
+  width        : 100%;
+  padding      : 11px 14px;
+  border       : 1.5px solid var(--border);
+  border-radius: 8px;
+  font-family  : 'Inter', sans-serif;
+  font-size    : 14px;
+  font-weight  : 300;
+  color        : var(--text);
+  background   : var(--surface-2);
+  outline      : none;
+  resize       : vertical;
+  min-height   : 80px;
+  transition   : border-color 0.2s, background 0.35s, color 0.3s;
+  line-height  : 1.5;
+}
+
+.field-full textarea:focus {
+  border-color: var(--purple);
+  background  : var(--surface);
+}
+
+.field-full textarea::placeholder {
+  color  : var(--muted);
+  opacity: 0.6;
+}
+
 .field input.invalid {
   border-color: var(--error);
   background  : rgba(160, 90, 90, 0.05);

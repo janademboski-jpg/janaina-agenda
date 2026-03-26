@@ -259,6 +259,7 @@ async function submitBooking() {
   const name     = document.getElementById('fieldName').value.trim();
   const whatsapp = document.getElementById('fieldWhatsapp').value.trim();
   const email    = document.getElementById('fieldEmail').value.trim();
+  const message  = document.getElementById('fieldMessage').value.trim();
   const msgEl    = document.getElementById('formMessage');
   const btn      = document.getElementById('btnSubmit');
 
@@ -280,7 +281,7 @@ async function submitBooking() {
     const data = await api({
       action: 'bookSlot',
       slotId: selectedSlot.id,
-      name, whatsapp, email
+      name, whatsapp, email, message
     });
 
     if (data.success) {
