@@ -520,8 +520,10 @@ function startEditSlot(id) {
       <select id="edit-time-${id}" onchange="onEditDateChange('${id}')">${getTimeOptions(timeVal)}</select>
       <input type="text" id="edit-day-${id}"  value="${slot.day}" disabled/>
       <input type="text" id="edit-id-${id}"   value="${id}" disabled style="font-size:10px;"/>
-      <button class="btn-small success-btn" onclick="saveEditSlot('${id}')">✓ Salvar</button>
-      <button class="btn-small" style="background:var(--muted)" onclick="renderAdminSlots()">✗ Cancelar</button>
+      <div class="edit-btn-group">
+        <button class="btn-small success-btn" onclick="saveEditSlot('${id}')">✓ Salvar</button>
+        <button class="btn-small" style="background:var(--muted)" onclick="renderAdminSlots()">✗ Cancelar</button>
+      </div>
     </div>`;
 }
 

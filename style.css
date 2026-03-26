@@ -1058,12 +1058,18 @@ body::before {
 }
 
 .admin-edit-row {
+  display              : grid;
+  grid-template-columns: 1fr 1fr;
+  gap                  : 8px;
+  padding              : 8px 0;
+  width                : 100%;
+}
+
+/* --- Buttons row always together --- */
+.admin-edit-row .edit-btn-group {
+  grid-column: 1 / -1;
   display    : flex;
-  align-items: center;
   gap        : 8px;
-  flex-wrap  : wrap;
-  padding    : 8px 0;
-  width      : 100%;
 }
 
 .admin-edit-row input,
@@ -1076,6 +1082,7 @@ body::before {
   color        : var(--text);
   background   : var(--surface-2);
   outline      : none;
+  width        : 100%;
   transition   : border-color 0.2s, background 0.35s, color 0.3s;
 }
 
