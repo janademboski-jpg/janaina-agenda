@@ -1,25 +1,24 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8" />
+  <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Agenda — Janaína Demboski</title>
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Jost:wght@300;400;500&display=swap" rel="stylesheet"/>
   <style>
     :root {
-      --cream: #faf7f2;
-      --warm-white: #f5f0e8;
-      --soft-taupe: #e8e0d4;
-      --muted: #9e9185;
-      --text: #2c2520;
-      --text-light: #6b5f57;
-      --accent: #8b6f5e;
+      --cream:       #faf7f2;
+      --warm-white:  #f5f0e8;
+      --soft-taupe:  #e8e0d4;
+      --muted:       #9e9185;
+      --text:        #2c2520;
+      --text-light:  #6b5f57;
+      --accent:      #8b6f5e;
       --accent-dark: #6b5044;
-      --purple: #7c6b9e;
-      --success: #5a8a6a;
-      --error: #a05a5a;
-      --shadow: 0 4px 32px rgba(44,37,32,0.08);
-      --shadow-lg: 0 8px 48px rgba(44,37,32,0.14);
+      --purple:      #7c6b9e;
+      --success:     #5a8a6a;
+      --error:       #a05a5a;
+      --shadow:      0 4px 32px rgba(44,37,32,0.08);
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -29,11 +28,9 @@
       background: var(--cream);
       color: var(--text);
       min-height: 100vh;
-      position: relative;
       overflow-x: hidden;
     }
 
-    /* --- Background texture --- */
     body::before {
       content: '';
       position: fixed;
@@ -46,9 +43,9 @@
     }
 
     .container {
-      max-width: 560px;
+      max-width: 860px;
       margin: 0 auto;
-      padding: 48px 24px 80px;
+      padding: 48px 20px 80px;
       position: relative;
       z-index: 1;
     }
@@ -57,11 +54,10 @@
     .header {
       text-align: center;
       margin-bottom: 48px;
-      animation: fadeUp 0.7s ease both;
+      animation: fadeUp 0.6s ease both;
     }
 
     .header-eyebrow {
-      font-family: 'Jost', sans-serif;
       font-size: 11px;
       font-weight: 500;
       letter-spacing: 0.18em;
@@ -72,16 +68,19 @@
 
     .header h1 {
       font-family: 'Cormorant Garamond', serif;
-      font-size: clamp(2rem, 6vw, 2.8rem);
+      font-size: clamp(2rem, 5vw, 2.8rem);
       font-weight: 300;
-      color: var(--text);
       line-height: 1.15;
       margin-bottom: 6px;
     }
 
-    .header h1 em {
-      font-style: italic;
-      color: var(--purple);
+    .header h1 em { font-style: italic; color: var(--purple); }
+
+    .divider {
+      width: 40px;
+      height: 1px;
+      background: var(--soft-taupe);
+      margin: 16px auto;
     }
 
     .header-sub {
@@ -89,131 +88,175 @@
       color: var(--text-light);
       font-weight: 300;
       letter-spacing: 0.04em;
-      margin-top: 10px;
     }
 
-    .divider {
-      width: 40px;
-      height: 1px;
-      background: var(--soft-taupe);
-      margin: 20px auto;
-    }
-
-    /* --- Section title --- */
     .section-label {
       font-size: 11px;
       font-weight: 500;
       letter-spacing: 0.15em;
       text-transform: uppercase;
       color: var(--muted);
-      margin-bottom: 16px;
-      animation: fadeUp 0.7s 0.1s ease both;
+      margin-bottom: 20px;
     }
 
-    /* --- Slots grid --- */
-    .slots-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 12px;
-      margin-bottom: 40px;
+    .loading-state {
+      text-align: center;
+      padding: 48px 0;
+      color: var(--muted);
+      font-size: 13px;
+      letter-spacing: 0.08em;
+      animation: pulse 1.5s ease infinite;
     }
 
-    .slot-card {
+    .empty-state {
+      text-align: center;
+      padding: 40px 24px;
       background: white;
       border: 1.5px solid var(--soft-taupe);
-      border-radius: 12px;
-      padding: 18px 16px;
-      cursor: pointer;
-      transition: all 0.22s ease;
-      position: relative;
+      border-radius: 16px;
+      color: var(--muted);
+      font-size: 14px;
+      font-weight: 300;
+    }
+
+    /* --- Week block --- */
+    .week-block {
+      margin-bottom: 28px;
       animation: fadeUp 0.5s ease both;
     }
 
-    .slot-card:hover:not(.booked):not(.selected) {
+    .week-header {
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 10px;
+      padding-left: 2px;
+    }
+
+    /* --- Calendar grid: 6 columns Mon–Sat --- */
+    .calendar-grid {
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      gap: 8px;
+      background: white;
+      border: 1.5px solid var(--soft-taupe);
+      border-radius: 16px;
+      padding: 16px;
+    }
+
+    .day-cell {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      border-radius: 10px;
+      padding: 10px 6px;
+      min-height: 100px;
+    }
+
+    .day-cell.has-slot {
+      cursor: pointer;
+      border: 1.5px solid var(--soft-taupe);
+      transition: all 0.2s ease;
+    }
+
+    .day-cell.has-slot:hover:not(.booked):not(.selected) {
       border-color: var(--accent);
       box-shadow: var(--shadow);
       transform: translateY(-2px);
-    }
-
-    .slot-card.selected {
-      border-color: var(--purple);
-      background: rgba(124,107,158,0.05);
-      box-shadow: 0 0 0 3px rgba(124,107,158,0.15);
-    }
-
-    .slot-card.booked {
       background: var(--warm-white);
-      border-color: var(--soft-taupe);
+    }
+
+    .day-cell.selected {
+      border: 1.5px solid var(--purple);
+      background: rgba(124,107,158,0.06);
+      box-shadow: 0 0 0 3px rgba(124,107,158,0.12);
+    }
+
+    .day-cell.booked {
+      border: 1.5px solid var(--soft-taupe);
+      background: var(--warm-white);
       cursor: not-allowed;
-      opacity: 0.55;
+      opacity: 0.5;
     }
 
-    .slot-day {
-      font-family: 'Cormorant Garamond', serif;
-      font-size: 1.25rem;
-      font-weight: 400;
-      color: var(--text);
-      line-height: 1.2;
+    .day-cell.empty {
+      border: 1.5px dashed rgba(232,224,212,0.6);
+      opacity: 0.35;
     }
 
-    .slot-time {
-      font-size: 12px;
-      font-weight: 400;
-      color: var(--text-light);
-      margin-top: 4px;
-      letter-spacing: 0.04em;
-    }
-
-    .slot-badge {
-      position: absolute;
-      top: 10px;
-      right: 10px;
+    .day-name {
       font-size: 10px;
       font-weight: 500;
-      letter-spacing: 0.08em;
+      letter-spacing: 0.1em;
       text-transform: uppercase;
-      padding: 3px 8px;
+      color: var(--muted);
+      margin-bottom: 6px;
+    }
+
+    .day-date-num {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.5rem;
+      font-weight: 300;
+      color: var(--text);
+      line-height: 1;
+      margin-bottom: 2px;
+    }
+
+    .day-month {
+      font-size: 10px;
+      color: var(--muted);
+      font-weight: 300;
+      margin-bottom: 8px;
+    }
+
+    .day-time {
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--accent);
+      margin-bottom: 4px;
+    }
+
+    .day-cell.selected .day-time { color: var(--purple); }
+    .day-cell.booked   .day-time { color: var(--muted); }
+
+    .day-badge {
+      font-size: 9px;
+      font-weight: 500;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      padding: 2px 8px;
       border-radius: 20px;
     }
 
-    .slot-badge.available {
-      background: rgba(90,138,106,0.12);
-      color: var(--success);
-    }
+    .day-badge.available { background: rgba(90,138,106,0.12);  color: var(--success); }
+    .day-badge.booked    { background: rgba(158,145,133,0.15); color: var(--muted); }
+    .day-badge.selected  { background: rgba(124,107,158,0.18); color: var(--purple); }
 
-    .slot-badge.booked {
-      background: rgba(158,145,133,0.15);
-      color: var(--muted);
-    }
-
-    .slot-badge.selected {
-      background: rgba(124,107,158,0.18);
-      color: var(--purple);
-    }
-
-    /* --- Form --- */
+    /* --- Booking form --- */
     .booking-form {
       background: white;
       border: 1.5px solid var(--soft-taupe);
       border-radius: 16px;
       padding: 28px 24px;
+      margin-top: 8px;
       margin-bottom: 16px;
-      animation: fadeUp 0.5s 0.15s ease both;
+      animation: fadeUp 0.4s ease both;
     }
 
     .form-title {
       font-family: 'Cormorant Garamond', serif;
       font-size: 1.3rem;
       font-weight: 400;
-      color: var(--text);
-      margin-bottom: 6px;
+      margin-bottom: 4px;
     }
 
     .form-subtitle {
       font-size: 12px;
       color: var(--muted);
-      margin-bottom: 22px;
       font-weight: 300;
+      margin-bottom: 20px;
     }
 
     .selected-slot-info {
@@ -225,10 +268,12 @@
       color: var(--purple);
       font-weight: 500;
       margin-bottom: 20px;
-      letter-spacing: 0.02em;
     }
 
-    .field {
+    .fields-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 12px;
       margin-bottom: 16px;
     }
 
@@ -252,19 +297,12 @@
       font-weight: 300;
       color: var(--text);
       background: var(--cream);
-      transition: border-color 0.2s;
       outline: none;
+      transition: border-color 0.2s;
     }
 
-    .field input:focus {
-      border-color: var(--purple);
-      background: white;
-    }
-
-    .field input::placeholder {
-      color: var(--muted);
-      opacity: 0.6;
-    }
+    .field input:focus { border-color: var(--purple); background: white; }
+    .field input::placeholder { color: var(--muted); opacity: 0.6; }
 
     .btn-submit {
       width: 100%;
@@ -280,7 +318,6 @@
       text-transform: uppercase;
       cursor: pointer;
       transition: all 0.22s ease;
-      margin-top: 8px;
     }
 
     .btn-submit:hover:not(:disabled) {
@@ -289,56 +326,41 @@
       box-shadow: 0 4px 16px rgba(139,111,94,0.25);
     }
 
-    .btn-submit:disabled {
-      opacity: 0.5;
-      cursor: not-allowed;
-    }
+    .btn-submit:disabled { opacity: 0.5; cursor: not-allowed; }
 
-    /* --- Messages --- */
     .message {
       border-radius: 10px;
-      padding: 14px 18px;
+      padding: 12px 16px;
       font-size: 13px;
-      font-weight: 400;
       margin-top: 12px;
       display: none;
     }
 
-    .message.success {
-      background: rgba(90,138,106,0.1);
-      border: 1px solid rgba(90,138,106,0.25);
-      color: var(--success);
-      display: block;
-    }
+    .message.success { background: rgba(90,138,106,0.1);  border: 1px solid rgba(90,138,106,0.25); color: var(--success); display: block; }
+    .message.error   { background: rgba(160,90,90,0.1);   border: 1px solid rgba(160,90,90,0.2);  color: var(--error);   display: block; }
 
-    .message.error {
-      background: rgba(160,90,90,0.1);
-      border: 1px solid rgba(160,90,90,0.2);
-      color: var(--error);
-      display: block;
-    }
-
-    /* --- Loading state --- */
-    .loading-state {
+    /* --- Success screen --- */
+    .success-screen {
       text-align: center;
-      padding: 48px 0;
-      color: var(--muted);
-      font-size: 13px;
-      letter-spacing: 0.08em;
-      animation: pulse 1.5s ease infinite;
-    }
-
-    /* --- Empty / error state --- */
-    .empty-state {
-      text-align: center;
-      padding: 40px 24px;
+      padding: 48px 24px;
       background: white;
-      border: 1.5px solid var(--soft-taupe);
+      border: 1.5px solid rgba(90,138,106,0.25);
       border-radius: 16px;
-      color: var(--muted);
-      font-size: 14px;
-      font-weight: 300;
+      animation: fadeUp 0.5s ease both;
+      display: none;
     }
+
+    .success-screen .icon { font-size: 2.5rem; margin-bottom: 16px; }
+
+    .success-screen h2 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.8rem;
+      font-weight: 300;
+      color: var(--success);
+      margin-bottom: 10px;
+    }
+
+    .success-screen p { font-size: 14px; color: var(--text-light); font-weight: 300; line-height: 1.6; }
 
     /* --- Footer --- */
     .footer {
@@ -346,28 +368,14 @@
       margin-top: 40px;
       padding-top: 24px;
       border-top: 1px solid var(--soft-taupe);
-      animation: fadeUp 0.5s 0.3s ease both;
     }
 
-    .footer p {
-      font-size: 12px;
-      color: var(--muted);
-      font-weight: 300;
-    }
-
-    .footer a {
-      color: var(--accent);
-      text-decoration: none;
-      font-weight: 400;
-    }
-
+    .footer p { font-size: 12px; color: var(--muted); font-weight: 300; }
+    .footer a  { color: var(--accent); text-decoration: none; font-weight: 400; }
     .footer a:hover { text-decoration: underline; }
 
-    /* --- Admin panel --- */
-    .admin-toggle {
-      text-align: center;
-      margin-top: 32px;
-    }
+    /* --- Admin --- */
+    .admin-toggle { text-align: center; margin-top: 32px; }
 
     .btn-admin {
       background: none;
@@ -384,10 +392,7 @@
       transition: all 0.2s;
     }
 
-    .btn-admin:hover {
-      border-color: var(--accent);
-      color: var(--accent);
-    }
+    .btn-admin:hover { border-color: var(--accent); color: var(--accent); }
 
     .admin-panel {
       margin-top: 16px;
@@ -406,13 +411,9 @@
       font-size: 1.2rem;
       font-weight: 400;
       margin-bottom: 16px;
-      color: var(--text);
     }
 
-    .admin-login {
-      display: flex;
-      gap: 10px;
-    }
+    .admin-login { display: flex; gap: 10px; }
 
     .admin-login input {
       flex: 1;
@@ -429,7 +430,7 @@
     .admin-login input:focus { border-color: var(--accent); }
 
     .btn-small {
-      padding: 10px 18px;
+      padding: 9px 16px;
       background: var(--accent);
       color: white;
       border: none;
@@ -443,45 +444,9 @@
       white-space: nowrap;
     }
 
-    .btn-small:hover { background: var(--accent-dark); }
-
-    .btn-small.danger {
-      background: var(--error);
-    }
-
-    .btn-small.success-btn {
-      background: var(--success);
-    }
-
-    .admin-bookings {
-      margin-top: 20px;
-    }
-
-    .booking-row {
-      display: grid;
-      grid-template-columns: 90px 1fr;
-      gap: 8px;
-      padding: 12px 0;
-      border-bottom: 1px solid var(--warm-white);
-      font-size: 13px;
-      align-items: start;
-    }
-
-    .booking-row:last-child { border-bottom: none; }
-
-    .booking-slot-id {
-      font-weight: 500;
-      color: var(--accent);
-      font-size: 12px;
-      padding-top: 2px;
-    }
-
-    .booking-details { color: var(--text-light); line-height: 1.6; }
-    .booking-details strong { color: var(--text); font-weight: 500; }
-
-    .admin-slots {
-      margin-top: 20px;
-    }
+    .btn-small:hover      { background: var(--accent-dark); }
+    .btn-small.danger     { background: var(--error); }
+    .btn-small.success-btn { background: var(--success); }
 
     .admin-slot-row {
       display: flex;
@@ -491,6 +456,7 @@
       border-bottom: 1px solid var(--warm-white);
       font-size: 13px;
       gap: 8px;
+      flex-wrap: wrap;
     }
 
     .admin-slot-row:last-child { border-bottom: none; }
@@ -503,17 +469,9 @@
       letter-spacing: 0.06em;
     }
 
-    .slot-status-pill.available {
-      background: rgba(90,138,106,0.12);
-      color: var(--success);
-    }
+    .slot-status-pill.available { background: rgba(90,138,106,0.12);  color: var(--success); }
+    .slot-status-pill.booked    { background: rgba(158,145,133,0.15); color: var(--muted); }
 
-    .slot-status-pill.booked {
-      background: rgba(158,145,133,0.15);
-      color: var(--muted);
-    }
-
-    /* --- Add slot form --- */
     .add-slot-form {
       margin-top: 20px;
       padding-top: 20px;
@@ -531,7 +489,7 @@
 
     .add-slot-inputs {
       display: grid;
-      grid-template-columns: 1fr 1fr 1fr;
+      grid-template-columns: 1fr 1fr 1fr 1fr;
       gap: 8px;
       margin-bottom: 10px;
     }
@@ -549,6 +507,21 @@
 
     .add-slot-inputs input:focus { border-color: var(--accent); }
 
+    .booking-row {
+      display: grid;
+      grid-template-columns: 120px 1fr;
+      gap: 8px;
+      padding: 12px 0;
+      border-bottom: 1px solid var(--warm-white);
+      font-size: 13px;
+      align-items: start;
+    }
+
+    .booking-row:last-child { border-bottom: none; }
+    .booking-slot-id { font-weight: 500; color: var(--accent); font-size: 12px; padding-top: 2px; }
+    .booking-details { color: var(--text-light); line-height: 1.7; }
+    .booking-details strong { color: var(--text); font-weight: 500; }
+
     /* --- Animations --- */
     @keyframes fadeUp {
       from { opacity: 0; transform: translateY(16px); }
@@ -560,46 +533,24 @@
       50%       { opacity: 0.4; }
     }
 
-    /* --- Success screen --- */
-    .success-screen {
-      text-align: center;
-      padding: 48px 24px;
-      background: white;
-      border: 1.5px solid rgba(90,138,106,0.25);
-      border-radius: 16px;
-      animation: fadeUp 0.5s ease both;
-      display: none;
+    /* --- Responsive --- */
+    @media (max-width: 640px) {
+      .calendar-grid {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 6px;
+        padding: 12px;
+      }
+      .fields-row        { grid-template-columns: 1fr; }
+      .add-slot-inputs   { grid-template-columns: 1fr 1fr; }
+      .day-date-num      { font-size: 1.2rem; }
     }
 
-    .success-screen .checkmark {
-      font-size: 2.5rem;
-      margin-bottom: 16px;
-    }
-
-    .success-screen h2 {
-      font-family: 'Cormorant Garamond', serif;
-      font-size: 1.8rem;
-      font-weight: 300;
-      color: var(--success);
-      margin-bottom: 10px;
-    }
-
-    .success-screen p {
-      font-size: 14px;
-      color: var(--text-light);
-      font-weight: 300;
-      line-height: 1.6;
-    }
-
-    /* --- Mobile --- */
-    @media (max-width: 480px) {
-      .slots-grid { grid-template-columns: 1fr; }
-      .add-slot-inputs { grid-template-columns: 1fr 1fr; }
+    @media (max-width: 380px) {
+      .calendar-grid { grid-template-columns: repeat(2, 1fr); }
     }
   </style>
 </head>
 <body>
-
 <div class="container">
 
   <!-- Header -->
@@ -610,10 +561,10 @@
     <div class="header-sub">Atendimento online e presencial · Águas Claras &amp; Plano Piloto</div>
   </div>
 
-  <!-- Slots section -->
+  <!-- Calendar -->
   <div class="section-label">Horários disponíveis</div>
-  <div id="slotsContainer">
-    <div class="loading-state">Carregando horários...</div>
+  <div id="calendarContainer">
+    <div class="loading-state">Carregando agenda...</div>
   </div>
 
   <!-- Booking form -->
@@ -621,25 +572,27 @@
     <div class="form-title">Reservar horário</div>
     <div class="form-subtitle">Preencha seus dados para confirmar</div>
     <div class="selected-slot-info" id="selectedSlotInfo">—</div>
-    <div class="field">
-      <label>Nome completo</label>
-      <input type="text" id="fieldName" placeholder="Seu nome" autocomplete="name"/>
-    </div>
-    <div class="field">
-      <label>WhatsApp</label>
-      <input type="tel" id="fieldWhatsapp" placeholder="(61) 99999-9999" autocomplete="tel"/>
-    </div>
-    <div class="field">
-      <label>E-mail</label>
-      <input type="email" id="fieldEmail" placeholder="seu@email.com" autocomplete="email"/>
+    <div class="fields-row">
+      <div class="field">
+        <label>Nome completo</label>
+        <input type="text" id="fieldName" placeholder="Seu nome" autocomplete="name"/>
+      </div>
+      <div class="field">
+        <label>WhatsApp</label>
+        <input type="tel" id="fieldWhatsapp" placeholder="(61) 99999-9999" autocomplete="tel"/>
+      </div>
+      <div class="field">
+        <label>E-mail</label>
+        <input type="email" id="fieldEmail" placeholder="seu@email.com" autocomplete="email"/>
+      </div>
     </div>
     <button class="btn-submit" id="btnSubmit" onclick="submitBooking()">Confirmar agendamento</button>
     <div class="message" id="formMessage"></div>
   </div>
 
-  <!-- Success screen -->
+  <!-- Success -->
   <div class="success-screen" id="successScreen">
-    <div class="checkmark">🌿</div>
+    <div class="icon">🌿</div>
     <h2>Horário reservado!</h2>
     <p>Janaína entrará em contato em breve<br/>para confirmar seu atendimento.</p>
   </div>
@@ -649,7 +602,7 @@
     <p>📱 <a href="https://wa.me/5561992849023">61 99284-9023</a> &nbsp;·&nbsp; @psi.janainspira</p>
   </div>
 
-  <!-- Admin toggle -->
+  <!-- Admin -->
   <div class="admin-toggle">
     <button class="btn-admin" onclick="toggleAdmin()">Área administrativa</button>
   </div>
@@ -657,7 +610,6 @@
   <div class="admin-panel" id="adminPanel">
     <h3>Painel da Janaína</h3>
 
-    <!-- Login -->
     <div id="adminLogin">
       <div class="admin-login">
         <input type="password" id="adminPassword" placeholder="Senha" onkeydown="if(event.key==='Enter') adminAuth()"/>
@@ -666,46 +618,46 @@
       <div class="message" id="adminLoginMsg"></div>
     </div>
 
-    <!-- Admin content (hidden until auth) -->
     <div id="adminContent" style="display:none;">
-
-      <!-- Slots management -->
-      <div class="admin-slots">
+      <div style="margin-top:8px;">
         <div class="section-label" style="margin-bottom:12px;">Gerenciar horários</div>
         <div id="adminSlotsList"></div>
       </div>
 
-      <!-- Add new slot -->
       <div class="add-slot-form">
         <h4>Adicionar novo horário</h4>
         <div class="add-slot-inputs">
-          <input type="text" id="newSlotId"   placeholder="ID (ex: seg-20h)"/>
-          <input type="text" id="newSlotDay"  placeholder="Dia (ex: Segunda)"/>
+          <input type="text" id="newSlotId"   placeholder="ID (ex: ter-01abr)"/>
+          <input type="text" id="newSlotDay"  placeholder="Dia (ex: Terça)"/>
+          <input type="date" id="newSlotDate"/>
           <input type="text" id="newSlotTime" placeholder="Hora (ex: 20h)"/>
         </div>
         <button class="btn-small success-btn" onclick="addSlot()">+ Adicionar horário</button>
         <div class="message" id="addSlotMsg"></div>
       </div>
 
-      <!-- Bookings list -->
-      <div class="admin-bookings">
-        <div class="section-label" style="margin-top:20px; margin-bottom:12px;">Agendamentos recebidos</div>
+      <div style="margin-top:24px;">
+        <div class="section-label" style="margin-bottom:12px;">Agendamentos recebidos</div>
         <div id="adminBookingsList"></div>
       </div>
-
     </div>
   </div>
 
 </div>
-
 <script>
   // --- Config ---
-  const API_URL = 'https://script.google.com/macros/s/AKfycby8KtMACUfxjnoVOqNWbeY7KVT7bx7spo5RGt1Q05CG5TMfuOIIHMCvEAy4fpISw5JU4w/exec';
+  const API_URL = 'https://script.google.com/macros/s/AKfycbwr1Qy87oeFdHObXT2leYWA5X-FXmu3lSa4j-Kcfx9Tla5w4X1FpQaRYJR2C0CYoPMeiw/exec';
 
   // --- State ---
   let slots        = [];
   let selectedSlot = null;
   let adminPass    = '';
+
+  // --- Portuguese labels ---
+  const MONTHS       = ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
+  const MONTHS_SHORT = ['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
+  const DAYS_FULL    = ['Domingo','Segunda-feira','Terça-feira','Quarta-feira','Quinta-feira','Sexta-feira','Sábado'];
+  const DAY_SHORT    = ['Dom','Seg','Ter','Qua','Qui','Sex','Sáb'];
 
   // --- Init ---
   loadSlots();
@@ -715,54 +667,140 @@
     try {
       const res  = await fetch(`${API_URL}?action=getSlots`);
       const data = await res.json();
-      slots = data.slots || [];
-      renderSlots();
+      slots = (data.slots || []).sort((a, b) => {
+        if (!a.date) return 1;
+        if (!b.date) return -1;
+        return new Date(a.date) - new Date(b.date);
+      });
+      renderCalendar();
     } catch (e) {
-      document.getElementById('slotsContainer').innerHTML =
+      document.getElementById('calendarContainer').innerHTML =
         `<div class="empty-state">Não foi possível carregar os horários. Tente novamente.</div>`;
     }
   }
 
-  // --- Render slots ---
-  function renderSlots() {
-    const container = document.getElementById('slotsContainer');
+  // --- Parse date string safely (handles YYYY-MM-DD) ---
+  function parseDate(str) {
+    if (!str) return null;
+    // Force parse as local date to avoid timezone shifts
+    const s = String(str).trim();
+    const m = s.match(/^(\d{4})-(\d{2})-(\d{2})/);
+    if (m) return new Date(Number(m[1]), Number(m[2]) - 1, Number(m[3]));
+    const d = new Date(s);
+    return isNaN(d) ? null : d;
+  }
+
+  // --- Get Monday of the week containing date d ---
+  function getMonday(d) {
+    const date = new Date(d);
+    const dow  = date.getDay(); // 0=Sun
+    const diff = (dow === 0) ? -6 : 1 - dow;
+    date.setDate(date.getDate() + diff);
+    return date;
+  }
+
+  // --- Format week label ---
+  function formatWeekLabel(monday) {
+    const sat = new Date(monday);
+    sat.setDate(monday.getDate() + 5);
+    const d1 = monday.getDate(), m1 = monday.getMonth(), y1 = monday.getFullYear();
+    const d2 = sat.getDate(),    m2 = sat.getMonth(),    y2 = sat.getFullYear();
+    if (m1 === m2 && y1 === y2) return `${d1} – ${d2} de ${MONTHS[m1]} de ${y1}`;
+    return `${d1} ${MONTHS_SHORT[m1]} – ${d2} ${MONTHS_SHORT[m2]} ${y2}`;
+  }
+
+  // --- Render weekly calendar ---
+  function renderCalendar() {
+    const container = document.getElementById('calendarContainer');
+
     if (!slots.length) {
       container.innerHTML = `<div class="empty-state">Nenhum horário disponível no momento.</div>`;
       return;
     }
 
-    let html = '<div class="slots-grid">';
-    slots.forEach((slot, i) => {
-      const isBooked   = slot.status === 'booked';
-      const isSelected = selectedSlot && selectedSlot.id === slot.id;
-      const cardClass  = isBooked ? 'booked' : isSelected ? 'selected' : '';
-      const badgeClass = isBooked ? 'booked' : isSelected ? 'selected' : 'available';
-      const badgeText  = isBooked ? 'Ocupado' : isSelected ? 'Selecionado' : 'Livre';
-      const delay      = (i * 0.07).toFixed(2);
-
-      html += `
-        <div class="slot-card ${cardClass}" style="animation-delay:${delay}s"
-             onclick="${isBooked ? '' : `selectSlot('${slot.id}')`}">
-          <span class="slot-badge ${badgeClass}">${badgeText}</span>
-          <div class="slot-day">${slot.day}</div>
-          <div class="slot-time">${slot.time}</div>
-        </div>`;
+    // Group slots by week key (Monday date string)
+    const weekMap = new Map();
+    slots.forEach(slot => {
+      const d = parseDate(slot.date);
+      if (!d) return;
+      const mon = getMonday(d);
+      const key = `${mon.getFullYear()}-${mon.getMonth()}-${mon.getDate()}`;
+      if (!weekMap.has(key)) weekMap.set(key, { monday: mon, slots: [] });
+      weekMap.get(key).slots.push({ ...slot, parsedDate: d });
     });
-    html += '</div>';
+
+    if (!weekMap.size) {
+      container.innerHTML = `<div class="empty-state">Adicione datas aos horários na planilha (coluna E, formato YYYY-MM-DD).</div>`;
+      return;
+    }
+
+    // Mon=1 ... Sat=6 (we skip Sun=0)
+    const COL_DAYS = [1, 2, 3, 4, 5, 6];
+
+    let html = '';
+    weekMap.forEach(({ monday, slots: wSlots }) => {
+      html += `<div class="week-block"><div class="week-header">Semana de ${formatWeekLabel(monday)}</div><div class="calendar-grid">`;
+
+      COL_DAYS.forEach(dow => {
+        const cellDate = new Date(monday);
+        cellDate.setDate(monday.getDate() + (dow - 1));
+
+        const slot = wSlots.find(s =>
+          s.parsedDate.getFullYear() === cellDate.getFullYear() &&
+          s.parsedDate.getMonth()    === cellDate.getMonth()    &&
+          s.parsedDate.getDate()     === cellDate.getDate()
+        );
+
+        const dayLabel  = DAY_SHORT[dow];
+        const dateNum   = cellDate.getDate();
+        const monthStr  = MONTHS_SHORT[cellDate.getMonth()];
+
+        if (slot) {
+          const isBooked   = slot.status === 'booked';
+          const isSelected = selectedSlot && selectedSlot.id === slot.id;
+          const cls        = isBooked ? 'booked' : isSelected ? 'selected' : 'has-slot';
+          const badge      = isBooked ? 'booked' : isSelected ? 'selected' : 'available';
+          const badgeTxt   = isBooked ? 'Ocupado' : isSelected ? 'Selecionado' : 'Livre';
+          const click      = isBooked ? '' : `onclick="selectSlot('${slot.id}')"`;
+
+          html += `
+            <div class="day-cell ${cls}" ${click}>
+              <div class="day-name">${dayLabel}</div>
+              <div class="day-date-num">${dateNum}</div>
+              <div class="day-month">${monthStr}</div>
+              <div class="day-time">${slot.time}</div>
+              <div class="day-badge ${badge}">${badgeTxt}</div>
+            </div>`;
+        } else {
+          html += `
+            <div class="day-cell empty">
+              <div class="day-name">${dayLabel}</div>
+              <div class="day-date-num">${dateNum}</div>
+              <div class="day-month">${monthStr}</div>
+            </div>`;
+        }
+      });
+
+      html += `</div></div>`;
+    });
+
     container.innerHTML = html;
   }
 
-  // --- Select a slot ---
+  // --- Select slot ---
   function selectSlot(id) {
     selectedSlot = slots.find(s => s.id === id) || null;
-    renderSlots();
+    renderCalendar();
 
     const form = document.getElementById('bookingForm');
     if (selectedSlot) {
+      const d   = parseDate(selectedSlot.date);
+      const lbl = d
+        ? `${DAYS_FULL[d.getDay()]}, ${d.getDate()} de ${MONTHS[d.getMonth()]} de ${d.getFullYear()} · ${selectedSlot.time}`
+        : `${selectedSlot.day} · ${selectedSlot.time}`;
       form.style.display = 'block';
-      document.getElementById('selectedSlotInfo').textContent =
-        `${selectedSlot.day} às ${selectedSlot.time}`;
-      form.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      document.getElementById('selectedSlotInfo').textContent = lbl;
+      setTimeout(() => form.scrollIntoView({ behavior: 'smooth', block: 'start' }), 50);
     } else {
       form.style.display = 'none';
     }
@@ -776,88 +814,80 @@
     const msgEl    = document.getElementById('formMessage');
     const btn      = document.getElementById('btnSubmit');
 
-    msgEl.className = 'message';
-    msgEl.style.display = 'none';
+    msgEl.className = 'message'; msgEl.style.display = 'none';
 
-    if (!selectedSlot) { showMsg(msgEl, 'error', 'Selecione um horário.'); return; }
-    if (!name)         { showMsg(msgEl, 'error', 'Informe seu nome.'); return; }
-    if (!whatsapp)     { showMsg(msgEl, 'error', 'Informe seu WhatsApp.'); return; }
-    if (!email)        { showMsg(msgEl, 'error', 'Informe seu e-mail.'); return; }
+    if (!selectedSlot) { showMsg(msgEl,'error','Selecione um horário.'); return; }
+    if (!name)         { showMsg(msgEl,'error','Informe seu nome.'); return; }
+    if (!whatsapp)     { showMsg(msgEl,'error','Informe seu WhatsApp.'); return; }
+    if (!email)        { showMsg(msgEl,'error','Informe seu e-mail.'); return; }
 
-    btn.disabled    = true;
-    btn.textContent = 'Confirmando...';
+    btn.disabled = true; btn.textContent = 'Confirmando...';
 
     try {
       const res  = await fetch(API_URL, {
         method: 'POST',
-        body: JSON.stringify({
-          action:   'bookSlot',
-          slotId:   selectedSlot.id,
-          name, whatsapp, email
-        })
+        body: JSON.stringify({ action:'bookSlot', slotId:selectedSlot.id, name, whatsapp, email })
       });
       const data = await res.json();
 
       if (data.success) {
-        document.getElementById('bookingForm').style.display  = 'none';
+        document.getElementById('bookingForm').style.display   = 'none';
         document.getElementById('successScreen').style.display = 'block';
-        document.getElementById('successScreen').scrollIntoView({ behavior: 'smooth' });
-        // Update local state
+        document.getElementById('successScreen').scrollIntoView({ behavior:'smooth' });
         const s = slots.find(s => s.id === selectedSlot.id);
         if (s) s.status = 'booked';
         selectedSlot = null;
-        renderSlots();
+        renderCalendar();
       } else {
-        showMsg(msgEl, 'error', data.error || 'Erro ao reservar. Tente novamente.');
-        btn.disabled    = false;
-        btn.textContent = 'Confirmar agendamento';
+        showMsg(msgEl,'error', data.error || 'Erro ao reservar. Tente novamente.');
+        btn.disabled = false; btn.textContent = 'Confirmar agendamento';
       }
-    } catch (e) {
-      showMsg(msgEl, 'error', 'Erro de conexão. Tente novamente.');
-      btn.disabled    = false;
-      btn.textContent = 'Confirmar agendamento';
+    } catch(e) {
+      showMsg(msgEl,'error','Erro de conexão. Tente novamente.');
+      btn.disabled = false; btn.textContent = 'Confirmar agendamento';
     }
   }
 
-  // --- Admin toggle ---
-  function toggleAdmin() {
-    const panel = document.getElementById('adminPanel');
-    panel.classList.toggle('open');
-  }
+  // --- Admin ---
+  function toggleAdmin() { document.getElementById('adminPanel').classList.toggle('open'); }
 
-  // --- Admin auth ---
   async function adminAuth() {
     const pw    = document.getElementById('adminPassword').value;
     const msgEl = document.getElementById('adminLoginMsg');
-
     try {
-      const res  = await fetch(API_URL, {
-        method: 'POST',
-        body: JSON.stringify({ action: 'adminGetBookings', password: pw })
-      });
+      const res  = await fetch(API_URL, { method:'POST', body:JSON.stringify({ action:'adminGetBookings', password:pw }) });
       const data = await res.json();
-
       if (data.success) {
         adminPass = pw;
         document.getElementById('adminLogin').style.display   = 'none';
         document.getElementById('adminContent').style.display = 'block';
         renderAdminBookings(data.bookings);
         renderAdminSlots();
-      } else {
-        showMsg(msgEl, 'error', 'Senha incorreta.');
-      }
-    } catch (e) {
-      showMsg(msgEl, 'error', 'Erro de conexão.');
-    }
+      } else { showMsg(msgEl,'error','Senha incorreta.'); }
+    } catch(e) { showMsg(msgEl,'error','Erro de conexão.'); }
   }
 
-  // --- Render admin bookings ---
+  function renderAdminSlots() {
+    const el = document.getElementById('adminSlotsList');
+    if (!slots.length) { el.innerHTML = '<p style="font-size:13px;color:var(--muted);">Nenhum horário cadastrado.</p>'; return; }
+    el.innerHTML = slots.map(slot => {
+      const d   = parseDate(slot.date);
+      const lbl = d ? `${d.getDate()} de ${MONTHS[d.getMonth()]} de ${d.getFullYear()} · ${slot.time}` : `${slot.day} · ${slot.time}`;
+      return `
+        <div class="admin-slot-row">
+          <span><strong>${slot.day}</strong> — ${lbl}</span>
+          <span class="slot-status-pill ${slot.status}">${slot.status === 'available' ? 'Livre' : 'Ocupado'}</span>
+          <button class="btn-small ${slot.status === 'available' ? 'danger' : 'success-btn'}"
+                  onclick="toggleSlotStatus('${slot.id}','${slot.status}')">
+            ${slot.status === 'available' ? 'Bloquear' : 'Liberar'}
+          </button>
+        </div>`;
+    }).join('');
+  }
+
   function renderAdminBookings(bookings) {
     const el = document.getElementById('adminBookingsList');
-    if (!bookings.length) {
-      el.innerHTML = '<p style="font-size:13px;color:var(--muted);font-weight:300;">Nenhum agendamento ainda.</p>';
-      return;
-    }
+    if (!bookings.length) { el.innerHTML = '<p style="font-size:13px;color:var(--muted);font-weight:300;">Nenhum agendamento ainda.</p>'; return; }
     el.innerHTML = bookings.map(b => `
       <div class="booking-row">
         <div class="booking-slot-id">${b.slotId}</div>
@@ -870,72 +900,50 @@
       </div>`).join('');
   }
 
-  // --- Render admin slots ---
-  function renderAdminSlots() {
-    const el = document.getElementById('adminSlotsList');
-    el.innerHTML = slots.map(slot => `
-      <div class="admin-slot-row">
-        <span><strong>${slot.day}</strong> · ${slot.time}</span>
-        <span class="slot-status-pill ${slot.status}">${slot.status === 'available' ? 'Livre' : 'Ocupado'}</span>
-        <button class="btn-small ${slot.status === 'available' ? 'danger' : 'success-btn'}"
-                onclick="toggleSlotStatus('${slot.id}', '${slot.status}')">
-          ${slot.status === 'available' ? 'Bloquear' : 'Liberar'}
-        </button>
-      </div>`).join('');
-  }
-
-  // --- Toggle slot status (admin) ---
   async function toggleSlotStatus(id, currentStatus) {
     const newStatus = currentStatus === 'available' ? 'booked' : 'available';
     try {
-      const res  = await fetch(API_URL, {
-        method: 'POST',
-        body: JSON.stringify({ action: 'adminUpdateSlot', password: adminPass, slotId: id, status: newStatus })
-      });
+      const res  = await fetch(API_URL, { method:'POST', body:JSON.stringify({ action:'adminUpdateSlot', password:adminPass, slotId:id, status:newStatus }) });
       const data = await res.json();
       if (data.success) {
         const s = slots.find(s => s.id === id);
         if (s) s.status = newStatus;
-        renderSlots();
+        renderCalendar();
         renderAdminSlots();
       }
-    } catch (e) { alert('Erro ao atualizar horário.'); }
+    } catch(e) { alert('Erro ao atualizar horário.'); }
   }
 
-  // --- Add new slot (admin) ---
   async function addSlot() {
-    const id   = document.getElementById('newSlotId').value.trim();
-    const day  = document.getElementById('newSlotDay').value.trim();
-    const time = document.getElementById('newSlotTime').value.trim();
+    const id    = document.getElementById('newSlotId').value.trim();
+    const day   = document.getElementById('newSlotDay').value.trim();
+    const date  = document.getElementById('newSlotDate').value.trim();
+    const time  = document.getElementById('newSlotTime').value.trim();
     const msgEl = document.getElementById('addSlotMsg');
 
-    if (!id || !day || !time) { showMsg(msgEl, 'error', 'Preencha todos os campos.'); return; }
+    if (!id || !day || !date || !time) { showMsg(msgEl,'error','Preencha todos os campos.'); return; }
 
     try {
-      const res  = await fetch(API_URL, {
-        method: 'POST',
-        body: JSON.stringify({ action: 'adminAddSlot', password: adminPass, id, day, time })
-      });
+      const res  = await fetch(API_URL, { method:'POST', body:JSON.stringify({ action:'adminAddSlot', password:adminPass, id, day, time, date }) });
       const data = await res.json();
       if (data.success) {
-        slots.push({ id, day, time, status: 'available' });
-        renderSlots();
+        slots.push({ id, day, time, date, status:'available' });
+        slots.sort((a,b) => { if(!a.date) return 1; if(!b.date) return -1; return new Date(a.date)-new Date(b.date); });
+        renderCalendar();
         renderAdminSlots();
-        document.getElementById('newSlotId').value   = '';
-        document.getElementById('newSlotDay').value  = '';
+        document.getElementById('newSlotId').value = '';
+        document.getElementById('newSlotDay').value = '';
+        document.getElementById('newSlotDate').value = '';
         document.getElementById('newSlotTime').value = '';
-        showMsg(msgEl, 'success', 'Horário adicionado!');
-      } else {
-        showMsg(msgEl, 'error', data.error || 'Erro ao adicionar.');
-      }
-    } catch (e) { showMsg(msgEl, 'error', 'Erro de conexão.'); }
+        showMsg(msgEl,'success','Horário adicionado!');
+      } else { showMsg(msgEl,'error', data.error || 'Erro ao adicionar.'); }
+    } catch(e) { showMsg(msgEl,'error','Erro de conexão.'); }
   }
 
-  // --- Helper: show message ---
   function showMsg(el, type, text) {
-    el.className      = `message ${type}`;
-    el.textContent    = text;
-    el.style.display  = 'block';
+    el.className = `message ${type}`;
+    el.textContent = text;
+    el.style.display = 'block';
   }
 </script>
 </body>
