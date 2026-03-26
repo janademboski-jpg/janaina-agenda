@@ -79,8 +79,8 @@
   --border       : #e0d4c8;
   --border-strong: #b8a898;
   --text         : #1a1410;
-  --text-2       : #3a3028;
-  --muted        : #7a6858;
+  --text-2       : #2e2418;
+  --muted        : #5c4a3a;
   --brand        : #8b6f5e;
   --brand-dark   : #6b5044;
   --brand-subtle : #f5eae4;
@@ -103,8 +103,8 @@
   --border       : #2e3850;
   --border-strong: #3a4a68;
   --text         : #edf0f8;
-  --text-2       : #b0bcd4;
-  --muted        : #7a8baa;
+  --text-2       : #c8d0e8;
+  --muted        : #9aaac8;
   --brand        : #c4a888;
   --brand-dark   : #d4b898;
   --brand-subtle : #252030;
@@ -112,8 +112,8 @@
   --success      : #6abf88;
   --error        : #e08888;
   --shadow-sm    : 0 0 0 1px rgba(255, 200, 160, 0.08);
-  --shadow-md    : 0 4px 20px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255, 200, 160, 0.06);
-  --shadow-lg    : 0 16px 48px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(255, 200, 160, 0.08);
+  --shadow-md    : 0 4px 20px rgba(5, 8, 20, 0.5), 0 0 0 1px rgba(255, 200, 160, 0.06);
+  --shadow-lg    : 0 16px 48px rgba(5, 8, 20, 0.6), 0 0 0 1px rgba(255, 200, 160, 0.08);
   --glow         : 0 0 40px rgba(160, 136, 120, 0.06);
 }
 
@@ -255,8 +255,11 @@ body::before {
   text-transform: uppercase;
   color         : var(--muted);
   margin-bottom : 12px;
-  opacity       : 0.75;
   transition    : color 0.3s;
+}
+
+[data-theme="dark"] .header-eyebrow {
+  opacity: 1;
 }
 
 .header-logo {
@@ -509,6 +512,12 @@ body::before {
 
 .slot-btn.booked .slot-status-label {
   color: var(--muted);
+}
+
+/* --- Dark theme: boost booked slot text contrast --- */
+[data-theme="dark"] .slot-btn.booked .slot-time-label,
+[data-theme="dark"] .slot-btn.booked .slot-status-label {
+  color: var(--text-2);
 }
 
 /* ============================================================
@@ -837,8 +846,7 @@ body::before {
   color         : var(--muted);
   font-weight   : 300;
   letter-spacing: 0.03em;
-  opacity       : 0.6;
-  transition    : color 0.3s, opacity 0.3s;
+  transition    : color 0.3s;
 }
 
 .footer-credit:hover {
