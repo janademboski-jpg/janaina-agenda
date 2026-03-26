@@ -915,7 +915,23 @@ body::before {
   margin-bottom        : 10px;
 }
 
-.add-slot-inputs input {
+.add-slot-field {
+  display       : flex;
+  flex-direction: column;
+  gap           : 5px;
+}
+
+.add-slot-label {
+  font-size     : 11px;
+  font-weight   : 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color         : var(--muted);
+  transition    : color 0.3s;
+}
+
+.add-slot-inputs input,
+.add-slot-inputs select {
   padding      : 9px 12px;
   border       : 1.5px solid var(--border);
   border-radius: 8px;
@@ -925,10 +941,22 @@ body::before {
   background   : var(--surface-2);
   outline      : none;
   transition   : border-color 0.2s, background 0.35s, color 0.3s;
+  width        : 100%;
 }
 
-.add-slot-inputs input:focus {
+.add-slot-inputs input:focus,
+.add-slot-inputs select:focus {
   border-color: var(--brand);
+}
+
+.add-slot-inputs input:disabled {
+  opacity: 0.6;
+  cursor : not-allowed;
+  color  : var(--muted);
+}
+
+.add-slot-inputs select {
+  cursor: pointer;
 }
 
 .booking-row {

@@ -66,7 +66,56 @@ function restoreAdminSession() {
   }).catch(() => {});
 }
 
-// --- Sticky header shadow ---
+// --- Populate time dropdown with 15min intervals ---
+function populateTimeDropdown() {
+  const select = document.getElementById('newSlotTime');
+  select.innerHTML = '<option value="">Selecione...</option>';
+  for (let h = 6; h < 23; h++) {
+    for (let m = 0; m < 60; m += 15) {
+      const hh  = String(h).padStart(2, '0');
+      const mm  = String(m).padStart(2, '0');
+      const val = `${hh}:${mm}`;
+      const lbl = `${hh}h${mm === '00' ? '' : mm}`;
+      select.innerHTML += `<option value="${val}">${lbl}</option>`;
+    }
+  }
+}
+
+// --- Auto-fill Day and ID when date changes ---
+function onSlotDateChange() {
+  const dateVal = document.getElementById('newSlotDate').value;
+  if (!dateVal) {
+    document.getElementById('newSlotDay').value = '';
+    document.getElementById('newSlotId').value  = '';
+    return;
+  }
+  const d       = parseDate(dateVal);
+  const dayName = DAYS_FULL[d.getDay()].split('-')[0]; // "Terça" from "Terça-feira"
+  document.getElementById('newSlotDay').value = dayName;
+  updateSlotId();
+}
+
+// --- Auto-fill ID when time changes ---
+function onSlotTimeChange() { updateSlotId(); }
+
+// --- Generate unique ID from date + time ---
+function updateSlotId() {
+  const dateVal = document.getElementById('newSlotDate').value;
+  const timeVal = document.getElementById('newSlotTime').value;
+  if (!dateVal || !timeVal) {
+    document.getElementById('newSlotId').value = '';
+    return;
+  }
+  const timeClean = timeVal.replace(':', 'h').replace('h00', 'h');
+  document.getElementById('newSlotId').value = `${dateVal}-${timeClean}`;
+}
+
+// --- Format time value for display (e.g. "20:00" → "20h") ---
+function formatTimeDisplay(timeVal) {
+  if (!timeVal) return '';
+  const [h, m] = timeVal.split(':');
+  return m === '00' ? `${h}h` : `${h}h${m}`;
+}
 window.addEventListener('scroll', () => {
   document.getElementById('themeBar').classList.toggle('scrolled', window.scrollY > 8);
 }, { passive: true });
@@ -75,17 +124,24 @@ window.addEventListener('scroll', () => {
 initTheme();
 loadSlots();
 restoreAdminSession();
+populateTimeDropdown();
 
 // --- Load slots ---
 async function loadSlots() {
   try {
     const data = await api({ action: 'getSlots' });
-    slots = (data.slots || []).sort((a, b) => {
-      const da = parseDate(a.date), db = parseDate(b.date);
-      if (!da) return 1; if (!db) return -1;
-      if (da - db !== 0) return da - db;
-      return (a.time || '').localeCompare(b.time || '');
-    });
+    const today = new Date(); today.setHours(0,0,0,0);
+    slots = (data.slots || [])
+      .filter(s => {
+        const d = parseDate(s.date);
+        return d && d >= today; // --- Hide past slots ---
+      })
+      .sort((a, b) => {
+        const da = parseDate(a.date), db = parseDate(b.date);
+        if (!da) return 1; if (!db) return -1;
+        if (da - db !== 0) return da - db;
+        return (a.time || '').localeCompare(b.time || '');
+      });
     renderCalendar();
   } catch(e) {
     document.getElementById('calendarContainer').innerHTML =
@@ -404,14 +460,17 @@ async function toggleSlotStatus(id, currentStatus) {
 }
 
 async function addSlot() {
-  const id    = document.getElementById('newSlotId').value.trim();
-  const day   = document.getElementById('newSlotDay').value.trim();
-  const date  = document.getElementById('newSlotDate').value.trim();
-  const time  = document.getElementById('newSlotTime').value.trim();
-  const msgEl = document.getElementById('addSlotMsg');
-  const btn   = event.target;
+  const date    = document.getElementById('newSlotDate').value.trim();
+  const timeVal = document.getElementById('newSlotTime').value.trim();
+  const day     = document.getElementById('newSlotDay').value.trim();
+  const id      = document.getElementById('newSlotId').value.trim();
+  const msgEl   = document.getElementById('addSlotMsg');
+  const btn     = event.target;
 
-  if (!id || !day || !date || !time) { showMsg(msgEl, 'error', 'Preencha todos os campos.'); return; }
+  if (!date || !timeVal) { showMsg(msgEl, 'error', 'Selecione a data e o horário.'); return; }
+
+  // --- Format time for display (20:00 → 20h, 20:30 → 20h30) ---
+  const time = formatTimeDisplay(timeVal);
 
   // --- Fix 3: Prevent double-click ---
   btn.disabled    = true;
@@ -429,10 +488,10 @@ async function addSlot() {
       });
       renderCalendar();
       renderAdminSlots();
-      document.getElementById('newSlotId').value   = '';
-      document.getElementById('newSlotDay').value  = '';
       document.getElementById('newSlotDate').value = '';
       document.getElementById('newSlotTime').value = '';
+      document.getElementById('newSlotDay').value  = '';
+      document.getElementById('newSlotId').value   = '';
       showMsg(msgEl, 'success', 'Horário adicionado!');
     } else { showMsg(msgEl, 'error', data.error || 'Erro ao adicionar.'); }
   } catch(e) { showMsg(msgEl, 'error', 'Erro de conexão.'); }
