@@ -19,7 +19,7 @@
   --brand        : #8b6f5e;
   --brand-dark   : #6b5044;
   --brand-subtle : #f5eae4;
-  --purple       : #7c6b9e;
+  --purple       : #6b5a9e;
   --success      : #4a7a5a;
   --error        : #a05a5a;
   --shadow-sm    : 0 1px 3px rgba(100, 60, 30, 0.08), 0 0 0 1px rgba(100, 60, 30, 0.04);
@@ -43,7 +43,7 @@
   --brand        : #c4a888;
   --brand-dark   : #d4b898;
   --brand-subtle : #252030;
-  --purple       : #b0a0e0;
+  --purple       : #c4b4ff;
   --success      : #6abf88;
   --error        : #e08888;
   --shadow-sm    : 0 0 0 1px rgba(255, 200, 160, 0.08);
@@ -391,8 +391,14 @@ body::before {
 
 .slot-btn.selected {
   border-color: var(--purple);
+  border-width: 2px;
   background  : var(--brand-subtle);
-  box-shadow  : 0 0 0 2px rgba(124, 107, 158, 0.2);
+  box-shadow  : 0 0 0 3px rgba(107, 90, 158, 0.25);
+}
+
+/* --- Dark theme selected gets brighter glow --- */
+[data-theme="dark"] .slot-btn.selected {
+  box-shadow: 0 0 0 3px rgba(196, 180, 255, 0.25);
 }
 
 .slot-btn.booked {
@@ -557,7 +563,7 @@ body::before {
   color        : var(--text);
   background   : var(--surface-2);
   outline      : none;
-  resize       : vertical;
+  resize       : none;
   min-height   : 80px;
   transition   : border-color 0.2s, background 0.35s, color 0.3s;
   line-height  : 1.5;
@@ -609,6 +615,16 @@ body::before {
   text-transform: uppercase;
   cursor        : pointer;
   transition    : all 0.22s ease;
+}
+
+/* --- Dark theme: stronger button contrast --- */
+[data-theme="dark"] .btn-submit {
+  background: #b89060;
+  color     : #fff;
+}
+
+[data-theme="dark"] .btn-submit:hover:not(:disabled) {
+  background: #c8a070;
 }
 
 .btn-submit:hover:not(:disabled) {
