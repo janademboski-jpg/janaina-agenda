@@ -352,6 +352,59 @@ body::before {
 }
 
 /* ============================================================
+   SKELETON LOADER
+   ============================================================ */
+@keyframes shimmer {
+  0% {
+    background-position: -600px 0;
+  }
+
+  100% {
+    background-position: 600px 0;
+  }
+}
+
+.skeleton {
+  border-radius: 6px;
+  background   : linear-gradient(90deg,
+      var(--surface-2) 25%,
+      var(--border) 50%,
+      var(--surface-2) 75%);
+  background-size: 600px 100%;
+  animation      : shimmer 1.6s infinite linear;
+}
+
+.skeleton-week-header {
+  height       : 12px;
+  width        : 180px;
+  margin-bottom: 10px;
+}
+
+.skeleton-day-name {
+  height: 10px;
+  width : 30px;
+  margin: 0 auto 6px;
+}
+
+.skeleton-day-num {
+  height: 20px;
+  width : 24px;
+  margin: 0 auto 4px;
+}
+
+.skeleton-day-month {
+  height: 10px;
+  width : 20px;
+  margin: 0 auto 15px;
+}
+
+.skeleton-slot {
+  height       : 44px;
+  width        : 100%;
+  border-radius: 6px;
+}
+
+/* ============================================================
    LOADING / EMPTY
    ============================================================ */
 .loading-state {

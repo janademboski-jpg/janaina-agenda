@@ -166,12 +166,16 @@ async function loadSlots() {
         if (da - db !== 0) return da - db;
         return (a.time || '').localeCompare(b.time || '');
       });
+    const skeleton = document.getElementById('skeletonLoader');
+    if (skeleton) skeleton.style.display = 'none';
     renderCalendar();
     // --- Re-render admin slots if already logged in ---
     if (adminPass && document.getElementById('adminContent').style.display === 'block') {
       renderAdminSlots();
     }
   } catch(e) {
+    const skeleton = document.getElementById('skeletonLoader');
+    if (skeleton) skeleton.style.display = 'none';
     document.getElementById('calendarContainer').innerHTML =
       `<div class="empty-state">Não foi possível carregar os horários. Tente novamente.</div>`;
   }
