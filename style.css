@@ -1254,11 +1254,42 @@ body::before {
   color     : var(--muted);
 }
 
-.add-slot-form {
-  margin-top : 20px;
-  padding-top: 20px;
-  border-top : 1px solid var(--border);
-  transition : border-color 0.35s;
+.admin-tabs {
+  display      : flex;
+  gap          : 0;
+  border-bottom: 1.5px solid var(--border);
+  margin-bottom: 4px;
+  margin-top   : 16px;
+}
+
+.admin-tab {
+  padding      : 10px 20px;
+  font-family  : 'Inter', sans-serif;
+  font-size    : 13px;
+  font-weight  : 400;
+  color        : var(--muted);
+  background   : none;
+  border       : none;
+  border-bottom: 2px solid transparent;
+  cursor       : pointer;
+  transition   : all 0.2s;
+  margin-bottom: -1.5px;
+}
+
+.admin-tab:hover {
+  color: var(--text-2);
+}
+
+.admin-tab.active {
+  color        : var(--brand);
+  font-weight  : 500;
+  border-bottom: 2px solid var(--brand);
+}
+
+margin-top : 20px;
+padding-top: 20px;
+border-top : 1px solid var(--border);
+transition : border-color 0.35s;
 }
 
 .add-slot-form h4 {

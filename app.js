@@ -491,6 +491,26 @@ async function submitBooking() {
   }
 }
 
+// --- Switch admin tabs ---
+function switchTab(tab) {
+  const horarios      = document.getElementById('tabContentHorarios');
+  const agendamentos  = document.getElementById('tabContentAgendamentos');
+  const tabHorarios   = document.getElementById('tabHorarios');
+  const tabAgend      = document.getElementById('tabAgendamentos');
+
+  if (tab === 'horarios') {
+    horarios.style.display     = 'block';
+    agendamentos.style.display = 'none';
+    tabHorarios.classList.add('active');
+    tabAgend.classList.remove('active');
+  } else {
+    horarios.style.display     = 'none';
+    agendamentos.style.display = 'block';
+    tabHorarios.classList.remove('active');
+    tabAgend.classList.add('active');
+  }
+}
+
 // --- Admin ---
 function toggleAdmin() {
   const panel  = document.getElementById('adminPanel');
@@ -737,6 +757,13 @@ function formatTimestamp(ts) {
 
 function renderAdminBookings(bookings) {
   const el = document.getElementById('adminBookingsList');
+  // --- Update tab badge count ---
+  const tab = document.getElementById('tabAgendamentos');
+  if (tab) {
+    tab.textContent = bookings.length > 0
+      ? `👥 Agendamentos (${bookings.length})`
+      : '👥 Agendamentos';
+  }
   if (!bookings.length) {
     el.innerHTML = '<p style="font-size:13px;color:var(--muted);font-weight:300;">Nenhum agendamento ainda.</p>';
     return;

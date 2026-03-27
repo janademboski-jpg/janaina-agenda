@@ -312,43 +312,57 @@
       </div>
 
       <div id="adminContent" style="display:none;">
-        <div style="margin-top:8px;">
-          <div class="section-label" style="margin-bottom:12px;">Gerenciar horários</div>
-          <div id="adminSlotsList"></div>
+
+        <!-- Tabs -->
+        <div class="admin-tabs">
+          <button class="admin-tab active" id="tabHorarios" onclick="switchTab('horarios')">📅 Horários</button>
+          <button class="admin-tab" id="tabAgendamentos" onclick="switchTab('agendamentos')">👥 Agendamentos</button>
         </div>
 
-        <div class="add-slot-form">
-          <h4>Adicionar novo horário</h4>
-          <div class="add-slot-inputs">
-            <div class="add-slot-field">
-              <label class="add-slot-label">ID</label>
-              <input type="text" id="newSlotId" placeholder="Auto" disabled/>
-            </div>
-            <div class="add-slot-field">
-              <label class="add-slot-label">Dia</label>
-              <input type="text" id="newSlotDay" placeholder="Auto" disabled/>
-            </div>
-            <div class="add-slot-field">
-              <label class="add-slot-label">Data <span class="required">*</span></label>
-              <input type="date" id="newSlotDate" onchange="onSlotDateChange()"/>
-            </div>
-            <div class="add-slot-field">
-              <label class="add-slot-label">Horário <span class="required">*</span></label>
-              <select id="newSlotTime" onchange="onSlotTimeChange()">
-                <option value="">Selecione...</option>
-              </select>
-            </div>
+        <!-- Tab: Horários -->
+        <div id="tabContentHorarios">
+          <div style="margin-top:16px;">
+            <div class="section-label" style="margin-bottom:12px;">Gerenciar horários</div>
+            <div id="adminSlotsList"></div>
           </div>
-          <button class="btn-small success-btn" onclick="addSlot()">+ Adicionar horário</button>
-          <div class="message" id="addSlotMsg"></div>
+
+          <div class="add-slot-form">
+            <h4>Adicionar novo horário</h4>
+            <div class="add-slot-inputs">
+              <div class="add-slot-field">
+                <label class="add-slot-label">ID</label>
+                <input type="text" id="newSlotId" placeholder="Auto" disabled/>
+              </div>
+              <div class="add-slot-field">
+                <label class="add-slot-label">Dia</label>
+                <input type="text" id="newSlotDay" placeholder="Auto" disabled/>
+              </div>
+              <div class="add-slot-field">
+                <label class="add-slot-label">Data <span class="required">*</span></label>
+                <input type="date" id="newSlotDate" onchange="onSlotDateChange()"/>
+              </div>
+              <div class="add-slot-field">
+                <label class="add-slot-label">Horário <span class="required">*</span></label>
+                <select id="newSlotTime" onchange="onSlotTimeChange()">
+                  <option value="">Selecione...</option>
+                </select>
+              </div>
+            </div>
+            <button class="btn-small success-btn" onclick="addSlot()">+ Adicionar horário</button>
+            <div class="message" id="addSlotMsg"></div>
+          </div>
         </div>
 
-        <div style="margin-top:24px;">
-          <div class="section-label" style="margin-bottom:12px;">Agendamentos recebidos</div>
-          <div class="bookings-scroll">
-            <div id="adminBookingsList"></div>
+        <!-- Tab: Agendamentos -->
+        <div id="tabContentAgendamentos" style="display:none;">
+          <div style="margin-top:16px;">
+            <div class="section-label" style="margin-bottom:12px;">Agendamentos recebidos</div>
+            <div class="bookings-scroll">
+              <div id="adminBookingsList"></div>
+            </div>
           </div>
         </div>
+
       </div>
     </div>
 
