@@ -20,28 +20,24 @@ async function api(params) {
 }
 
 // --- Theme ---
-function setTheme(t, btn) {
-  document.documentElement.setAttribute('data-theme', t);
-  document.querySelectorAll('.tbtn').forEach(b => b.classList.remove('active'));
-  btn.classList.add('active');
-  localStorage.setItem('jana-theme', t);
+// --- Toggle theme ---
+function toggleTheme() {
+  const current = document.documentElement.getAttribute('data-theme');
+  const next    = current === 'warm' ? 'dark' : 'warm';
+  document.documentElement.setAttribute('data-theme', next);
+  localStorage.setItem('jana-theme', next);
+  // --- Update aria-label ---
+  const btn = document.getElementById('themeToggle');
+  if (btn) btn.setAttribute('aria-label', next === 'dark' ? 'Mudar para tema claro' : 'Mudar para tema escuro');
 }
 
-// --- Fix 1: Detect system theme on first visit ---
+// --- Init theme on load ---
 function initTheme() {
   const saved = localStorage.getItem('jana-theme');
-  let theme;
-  if (saved) {
-    theme = saved;
-  } else {
-    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-    theme = prefersDark ? 'dark' : 'warm';
-  }
+  const theme = saved || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'warm');
   document.documentElement.setAttribute('data-theme', theme);
-  // --- Fix 2: Remove active from ALL buttons first, then set correct one ---
-  document.querySelectorAll('.tbtn').forEach(b => b.classList.remove('active'));
-  const btn = document.querySelector(`.tbtn[data-theme="${theme}"]`);
-  if (btn) btn.classList.add('active');
+  const btn = document.getElementById('themeToggle');
+  if (btn) btn.setAttribute('aria-label', theme === 'dark' ? 'Mudar para tema claro' : 'Mudar para tema escuro');
 }
 
 // --- Fix 2: Restore admin session on page load ---
@@ -116,10 +112,6 @@ function formatTimeDisplay(timeVal) {
   const [h, m] = timeVal.split(':');
   return m === '00' ? `${h}h` : `${h}h${m}`;
 }
-window.addEventListener('scroll', () => {
-  document.getElementById('themeBar').classList.toggle('scrolled', window.scrollY > 8);
-}, { passive: true });
-
 // --- Init ---
 initTheme();
 checkCancelToken();

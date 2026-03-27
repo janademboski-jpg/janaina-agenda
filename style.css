@@ -174,68 +174,41 @@ body::before {
 /* ============================================================
    THEME BAR
    ============================================================ */
-.theme-bar {
+/* ============================================================
+   THEME TOGGLE — floating icon button
+   ============================================================ */
+.theme-toggle {
   position       : fixed;
-  top            : 0;
-  left           : 0;
-  right          : 0;
+  top            : 16px;
+  right          : 20px;
   z-index        : 100;
-  background     : var(--bg);
-  border-bottom  : 1px solid var(--border);
-  padding        : 10px 24px;
+  width          : 38px;
+  height         : 38px;
+  border-radius  : 50%;
+  border         : 1.5px solid var(--border);
+  background     : var(--surface);
+  cursor         : pointer;
+  font-size      : 18px;
   display        : flex;
   align-items    : center;
-  justify-content: flex-end;
-  gap            : 8px;
-  transition     : background 0.45s, border-color 0.35s, box-shadow 0.3s;
+  justify-content: center;
+  box-shadow     : var(--shadow-sm);
+  transition     : all 0.2s;
 }
 
-.theme-bar.scrolled {
-  box-shadow: 0 1px 0 var(--border), var(--shadow-md);
-}
-
-.theme-label {
-  font-size     : 10px;
-  font-weight   : 500;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color         : var(--muted);
-  margin-right  : 4px;
-  transition    : color 0.3s;
-}
-
-.tbtn {
-  font-family   : 'Inter', sans-serif;
-  font-size     : 10px;
-  font-weight   : 500;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  padding       : 5px 16px;
-  border-radius : 20px;
-  border        : 1px solid var(--border);
-  background    : var(--surface);
-  color         : var(--muted);
-  cursor        : pointer;
-  min-width     : 72px;
-  transition    : all 0.2s;
-}
-
-.tbtn:hover {
+.theme-toggle:hover {
   border-color: var(--border-strong);
-  color       : var(--text);
+  box-shadow  : var(--shadow-md);
+  transform   : scale(1.08);
 }
 
-.tbtn.active {
-  background  : var(--brand);
-  border-color: var(--brand);
-  color       : #fff;
+/* Icon set via CSS based on current theme */
+[data-theme="warm"] .theme-toggle::before {
+  content: '🌙';
 }
 
-.tbtn.active::before {
-  content    : '✓ ';
-  font-size  : 10px;
-  font-weight: 600;
-  opacity    : 0.9;
+[data-theme="dark"] .theme-toggle::before {
+  content: '☀️';
 }
 
 /* ============================================================
@@ -244,7 +217,7 @@ body::before {
 .container {
   max-width: 860px;
   margin   : 0 auto;
-  padding  : 76px 20px 80px;
+  padding  : 40px 20px 80px;
   position : relative;
   z-index  : 1;
 }
@@ -1456,10 +1429,6 @@ body::before {
 
   .day-date-num {
     font-size: 1.2rem;
-  }
-
-  .theme-bar {
-    padding: 8px 16px;
   }
 
   .mobile-br {

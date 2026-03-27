@@ -94,11 +94,8 @@
 <body>
 
   <!-- Theme switcher bar -->
-  <div class="theme-bar" id="themeBar" role="navigation" aria-label="Seleção de tema">
-    <span class="theme-label" aria-hidden="true">Tema</span>
-    <button class="tbtn" data-theme="warm" onclick="setTheme('warm', this)" aria-label="Tema claro">Claro</button>
-    <button class="tbtn" data-theme="dark"  onclick="setTheme('dark', this)"  aria-label="Tema escuro">Escuro</button>
-  </div>
+  <!-- Theme toggle -->
+  <button class="theme-toggle" id="themeToggle" onclick="toggleTheme()" aria-label="Alternar tema"></button>
 
   <div class="container">
 
