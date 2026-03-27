@@ -503,7 +503,13 @@ function getTimeOptions(selectedVal) {
 function startEditSlot(id) {
   const slot = slots.find(s => s.id === id);
   if (!slot) return;
-  const dateVal = slot.date || '';
+
+  // --- Ensure date is clean YYYY-MM-DD format ---
+  const d       = parseDate(slot.date);
+  const dateVal = d
+    ? `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`
+    : '';
+
   // --- Convert display time back to HH:MM for select ---
   let timeVal = slot.time.replace('h', ':');
   if (!timeVal.includes(':')) timeVal += ':00';
@@ -516,7 +522,7 @@ function startEditSlot(id) {
   const row = document.getElementById(`row-${id}`);
   row.innerHTML = `
     <div class="admin-edit-row">
-      <input type="date" id="edit-date-${id}" value="${dateVal}" min="${minVal}" onchange="onEditDateChange('${id}')"/>
+      <input type="date" id="edit-date-${id}" value="${dateVal}" onchange="onEditDateChange('${id}')"/>
       <select id="edit-time-${id}" onchange="onEditDateChange('${id}')">${getTimeOptions(timeVal)}</select>
       <input type="text" id="edit-day-${id}"  value="${slot.day}" disabled/>
       <input type="text" id="edit-id-${id}"   value="${id}" disabled style="font-size:10px;"/>
