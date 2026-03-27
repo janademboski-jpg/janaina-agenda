@@ -470,6 +470,13 @@ async function submitBooking() {
       document.getElementById('successScreen').scrollIntoView({ behavior: 'smooth' });
       const s = slots.find(s => s.id === selectedSlot.id);
       if (s) s.status = 'booked';
+      // --- Track booking conversion in GA4 ---
+      if (typeof gtag !== 'undefined') {
+        gtag('event', 'booking_completed', {
+          slot_id : selectedSlot.id,
+          tipo    : tipo
+        });
+      }
       selectedSlot = null;
       renderCalendar();
     } else {
