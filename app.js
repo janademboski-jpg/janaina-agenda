@@ -1,5 +1,5 @@
 // --- Config ---
-const API_URL = 'https://script.google.com/macros/s/AKfycbxhjzTdfHmicwKpYiZ321kBZkz3F5GOuvOzNNR8Nw37e-Shd6nZ6q-Nb3gwqCjMIh3uPg/exec';
+const API_URL = 'https://script.google.com/macros/s/AKfycbyzux0rLqz8qVSaZ7UaDXcGIWtgpCExDcXx9q3eLmF9CqHnstEn8PJ4-hQmZsTNvj2ZBQ/exec';
 
 // --- State ---
 let slots        = [];
@@ -122,6 +122,7 @@ window.addEventListener('scroll', () => {
 
 // --- Init ---
 initTheme();
+checkCancelToken();
 loadSlots();
 restoreAdminSession();
 populateTimeDropdown();
@@ -311,7 +312,49 @@ function selectSlot(id) {
   }
 }
 
-// --- Reset booking form for a new booking ---
+// --- Check for cancel token on page load ---
+function checkCancelToken() {
+  const params      = new URLSearchParams(window.location.search);
+  const cancelToken = params.get('cancel');
+  if (!cancelToken) return;
+
+  // --- Show cancel screen, hide everything else ---
+  document.getElementById('calendarContainer').style.display = 'none';
+  document.getElementById('cancelScreen').style.display      = 'block';
+
+  // --- Store token for confirmation ---
+  window._cancelToken = cancelToken;
+}
+
+// --- Confirm cancellation ---
+async function confirmCancel() {
+  const btn = document.getElementById('btnConfirmCancel');
+  btn.disabled    = true;
+  btn.textContent = 'Cancelando...';
+
+  try {
+    const data = await api({ action: 'cancelBooking', token: window._cancelToken });
+    if (data.success) {
+      document.getElementById('cancelIcon').textContent  = '✅';
+      document.getElementById('cancelTitle').textContent = 'Agendamento cancelado!';
+      document.getElementById('cancelMsg').textContent   =
+        'Seu agendamento foi cancelado com sucesso. Você receberá um e-mail de confirmação em breve.';
+      document.getElementById('cancelActions').innerHTML =
+        `<a class="btn-new-booking" href="${window.location.pathname}" style="display:inline-block;margin-top:16px;text-decoration:none;">Fazer novo agendamento</a>`;
+    } else {
+      document.getElementById('cancelIcon').textContent  = '⚠️';
+      document.getElementById('cancelTitle').textContent = 'Link inválido';
+      document.getElementById('cancelMsg').textContent   =
+        'Este link de cancelamento não é válido ou já foi utilizado.';
+      document.getElementById('cancelActions').innerHTML =
+        `<a class="btn-new-booking" href="${window.location.pathname}" style="display:inline-block;margin-top:16px;text-decoration:none;">Voltar à agenda</a>`;
+    }
+  } catch(e) {
+    btn.disabled    = false;
+    btn.textContent = 'Sim, cancelar agendamento';
+    alert('Erro de conexão. Tente novamente.');
+  }
+}
 function resetBooking() {
   document.getElementById('successScreen').style.display = 'none';
   document.getElementById('bookingForm').style.display   = 'none';

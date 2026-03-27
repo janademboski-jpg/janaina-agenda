@@ -138,6 +138,17 @@
       <div class="message" id="formMessage" role="alert"></div>
     </div>
 
+    <!-- Cancel screen -->
+    <div class="cancel-screen" id="cancelScreen" style="display:none;">
+      <div class="icon" id="cancelIcon">🗓</div>
+      <h2 id="cancelTitle">Cancelar agendamento</h2>
+      <p id="cancelMsg">Tem certeza que deseja cancelar seu agendamento?</p>
+      <div id="cancelActions">
+        <button class="btn-submit" id="btnConfirmCancel" onclick="confirmCancel()" style="max-width:280px;margin:16px auto 0;">Sim, cancelar agendamento</button>
+        <button class="btn-new-booking" onclick="window.location.href=window.location.pathname" style="display:block;margin:12px auto 0;">Voltar à agenda</button>
+      </div>
+    </div>
+
     <!-- Success screen -->
     <div class="success-screen" id="successScreen">
       <div class="icon">🌿</div>

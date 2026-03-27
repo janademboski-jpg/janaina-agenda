@@ -828,8 +828,42 @@ body::before {
 }
 
 /* ============================================================
-   FOOTER
+   CANCEL SCREEN
    ============================================================ */
+.cancel-screen {
+  text-align   : center;
+  padding      : 48px 24px;
+  background   : var(--surface);
+  border       : 1.5px solid var(--border);
+  border-radius: 16px;
+  box-shadow   : var(--shadow-md);
+  animation    : fadeUp 0.5s ease both;
+  margin-bottom: 32px;
+  transition   : background 0.35s, box-shadow 0.35s;
+}
+
+.cancel-screen .icon {
+  font-size    : 2.5rem;
+  margin-bottom: 16px;
+}
+
+.cancel-screen h2 {
+  font-family  : 'Playfair Display', serif;
+  font-size    : 1.8rem;
+  font-weight  : 400;
+  color        : var(--error);
+  margin-bottom: 10px;
+  transition   : color 0.3s;
+}
+
+.cancel-screen p {
+  font-size  : 14px;
+  color      : var(--text-2);
+  font-weight: 300;
+  line-height: 1.6;
+  transition : color 0.3s;
+}
+
 .footer {
   text-align : center;
   margin-top : 40px;
