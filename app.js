@@ -1,5 +1,5 @@
 // --- Config ---
-const API_URL = 'https://script.google.com/macros/s/AKfycbxaoXPOfPSssc2P6ronp-lz5-fIG4E5ivjj8GyjW9-TXK66ISF82iZSdge8BsXROQKc0w/exec';
+const API_URL = 'https://script.google.com/macros/s/AKfycbyHH7fwNi4fsYe_M4xiEp-84CSsWpM6DpRbhU3hLjxW-Sj12XhIIqDtOUNgTOFplvrlZQ/exec';
 
 // --- State ---
 let slots        = [];
@@ -403,12 +403,24 @@ function validateEmail() {
   return valid;
 }
 
-// --- Submit booking ---
+// --- Validate tipo de atendimento ---
+function validateTipo() {
+  const selected = document.querySelector('input[name="tipoAtendimento"]:checked');
+  const err      = document.getElementById('errTipo');
+  if (!selected) {
+    err.classList.add('show');
+    return false;
+  }
+  err.classList.remove('show');
+  return true;
+}
 async function submitBooking() {
   const name     = document.getElementById('fieldName').value.trim();
   const whatsapp = document.getElementById('fieldWhatsapp').value.trim();
   const email    = document.getElementById('fieldEmail').value.trim();
   const message  = document.getElementById('fieldMessage').value.trim();
+  const tipoEl   = document.querySelector('input[name="tipoAtendimento"]:checked');
+  const tipo     = tipoEl ? tipoEl.value : '';
   const msgEl    = document.getElementById('formMessage');
   const btn      = document.getElementById('btnSubmit');
 
@@ -416,10 +428,12 @@ async function submitBooking() {
 
   if (!selectedSlot) { showMsg(msgEl, 'error', 'Selecione um horário.'); return; }
 
+  const tipoOk  = validateTipo();
   const nameOk  = validateName();
   const phoneOk = validateWhatsapp();
   const emailOk = validateEmail();
 
+  if (!tipoOk)  { showMsg(msgEl, 'error', 'Selecione o tipo de atendimento.'); return; }
   if (!nameOk)  { showMsg(msgEl, 'error', 'Informe seu nome completo (nome e sobrenome).'); return; }
   if (!phoneOk) { showMsg(msgEl, 'error', 'Informe um número de WhatsApp válido.'); return; }
   if (!emailOk) { showMsg(msgEl, 'error', 'Informe um e-mail válido.'); return; }
@@ -430,7 +444,7 @@ async function submitBooking() {
     const data = await api({
       action: 'bookSlot',
       slotId: selectedSlot.id,
-      name, whatsapp, email, message
+      name, whatsapp, email, message, tipo
     });
 
     if (data.success) {
@@ -439,6 +453,8 @@ async function submitBooking() {
       document.getElementById('fieldWhatsapp').value = '';
       document.getElementById('fieldEmail').value    = '';
       document.getElementById('fieldMessage').value  = '';
+      const radios = document.querySelectorAll('input[name="tipoAtendimento"]');
+      radios.forEach(r => r.checked = false);
       document.getElementById('fieldName').classList.remove('valid', 'invalid');
       document.getElementById('fieldWhatsapp').classList.remove('valid', 'invalid');
       document.getElementById('fieldEmail').classList.remove('valid', 'invalid');
@@ -716,17 +732,23 @@ function renderAdminBookings(bookings) {
   }
   // --- Newest first ---
   const sorted = [...bookings].reverse();
-  el.innerHTML = sorted.map(b => `
+  el.innerHTML = sorted.map(b => {
+    const tipoIcon = b.tipo
+      ? (b.tipo.includes('Online') ? '💻' : '📍')
+      : '';
+    return `
     <div class="booking-row">
       <div class="booking-slot-id">${b.slotId}</div>
       <div class="booking-details">
         <strong>${b.name}</strong><br/>
         📱 ${b.whatsapp}<br/>
         ✉️ ${b.email}<br/>
-        ${b.message ? `💬 ${b.message}<br/>` : ''}
+        ${b.tipo     ? `${tipoIcon} ${b.tipo}<br/>`       : ''}
+        ${b.message  ? `💬 ${b.message}<br/>`             : ''}
         <span style="font-size:11px;color:var(--muted);">${formatTimestamp(b.timestamp)}</span>
       </div>
-    </div>`).join('');
+    </div>`;
+  }).join('');
 }
 
 async function toggleSlotStatus(id, currentStatus) {

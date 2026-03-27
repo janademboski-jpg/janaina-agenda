@@ -113,6 +113,29 @@
       <div class="form-title">Reservar horário</div>
       <div class="form-subtitle">Preencha seus dados para confirmar</div>
       <div class="selected-slot-info" id="selectedSlotInfo" aria-live="polite">—</div>
+
+      <!-- Tipo de atendimento -->
+      <div class="field field-full">
+        <label class="field-label-block">Tipo de atendimento <span class="required" aria-hidden="true">*</span></label>
+        <div class="radio-group" role="radiogroup" aria-label="Tipo de atendimento">
+          <label class="radio-option">
+            <input type="radio" name="tipoAtendimento" id="tipoOnline" value="Online"/>
+            <span class="radio-icon">💻</span>
+            <span class="radio-label">Online</span>
+          </label>
+          <label class="radio-option">
+            <input type="radio" name="tipoAtendimento" id="tipoAguasClaras" value="Presencial — Águas Claras"/>
+            <span class="radio-icon">📍</span>
+            <span class="radio-label">Presencial — Águas Claras</span>
+          </label>
+          <label class="radio-option">
+            <input type="radio" name="tipoAtendimento" id="tipoPlanoPiloto" value="Presencial — Plano Piloto"/>
+            <span class="radio-icon">📍</span>
+            <span class="radio-label">Presencial — Plano Piloto</span>
+          </label>
+        </div>
+        <div class="field-error" id="errTipo" role="alert">Selecione o tipo de atendimento.</div>
+      </div>
       <div class="fields-row">
         <div class="field">
           <label for="fieldName">Nome completo <span class="required" aria-hidden="true">*</span></label>

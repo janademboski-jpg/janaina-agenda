@@ -633,6 +633,85 @@ body::before {
   background  : var(--surface);
 }
 
+/* ============================================================
+   RADIO GROUP — TIPO DE ATENDIMENTO
+   ============================================================ */
+.field-label-block {
+  display       : block;
+  font-size     : 11px;
+  font-weight   : 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color         : var(--muted);
+  margin-bottom : 10px;
+  transition    : color 0.3s;
+}
+
+.radio-group {
+  display  : flex;
+  gap      : 10px;
+  flex-wrap: wrap;
+}
+
+.radio-option {
+  display      : flex;
+  align-items  : center;
+  gap          : 8px;
+  padding      : 10px 16px;
+  border       : 1.5px solid var(--border);
+  border-radius: 10px;
+  cursor       : pointer;
+  transition   : all 0.2s;
+  background   : var(--surface-2);
+  flex         : 1;
+  min-width    : 140px;
+}
+
+.radio-option:hover {
+  border-color: var(--brand);
+  background  : var(--brand-subtle);
+}
+
+.radio-option input[type="radio"] {
+  display: none;
+}
+
+.radio-option:has(input:checked) {
+  border-color: var(--purple);
+  background  : var(--brand-subtle);
+  box-shadow  : 0 0 0 3px rgba(107, 90, 158, 0.15);
+}
+
+[data-theme="dark"] .radio-option:has(input:checked) {
+  box-shadow: 0 0 0 3px rgba(196, 180, 255, 0.15);
+}
+
+.radio-icon {
+  font-size: 16px;
+}
+
+.radio-label {
+  font-size  : 13px;
+  font-weight: 400;
+  color      : var(--text-2);
+  transition : color 0.3s;
+}
+
+.radio-option:has(input:checked) .radio-label {
+  color      : var(--purple);
+  font-weight: 500;
+}
+
+@media (max-width: 640px) {
+  .radio-group {
+    flex-direction: column;
+  }
+
+  .radio-option {
+    min-width: unset;
+  }
+}
+
 .field input::placeholder {
   color  : var(--muted);
   opacity: 0.6;
