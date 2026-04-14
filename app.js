@@ -599,6 +599,8 @@ function getTimeOptions(selectedVal) {
 function startEditSlot(id) {
   const slot = slots.find(s => s.id === id);
   if (!slot) return;
+  // --- Close any other open edit form first ---
+  renderAdminSlots();
  
   // --- Ensure date is clean YYYY-MM-DD format ---
   const d       = parseDate(slot.date);
@@ -623,8 +625,8 @@ function startEditSlot(id) {
       <input type="text" id="edit-day-${id}"  value="${slot.day}" disabled/>
       <input type="text" id="edit-id-${id}"   value="${id}" disabled style="font-size:10px;"/>
       <div class="edit-btn-group">
-        <button class="btn-small success-btn" onclick="saveEditSlot('${id}')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="btn-icon-svg"><polyline points="20 6 9 17 4 12"/></svg>Salvar</button>
-        <button class="btn-small" style="background:var(--muted)" onclick="renderAdminSlots()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="btn-icon-svg"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>Cancelar</button>
+        <button class="btn-small success-btn" onclick="saveEditSlot('${id}')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" width="13" height="13" style="flex-shrink:0"><polyline points="20 6 9 17 4 12"/></svg>Salvar</button>
+        <button class="btn-small" style="background:var(--muted)" onclick="renderAdminSlots()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" width="13" height="13" style="flex-shrink:0"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>Cancelar</button>
       </div>
     </div>`;
 }
@@ -685,8 +687,8 @@ async function saveEditSlot(oldId) {
       if (s) { s.id = newId; s.day = newDay; s.time = newTime; s.date = dateVal; }
       renderCalendar();
       renderAdminSlots();
-    } else { alert(data.error || 'Erro ao editar.'); btn.disabled = false; btn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="btn-icon-svg"><polyline points="20 6 9 17 4 12"/></svg>Salvar'; }
-  } catch(e) { alert('Erro de conexão.'); btn.disabled = false; btn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="btn-icon-svg"><polyline points="20 6 9 17 4 12"/></svg>Salvar'; }
+    } else { alert(data.error || 'Erro ao editar.'); btn.disabled = false; btn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" width="13" height="13" style="flex-shrink:0"><polyline points="20 6 9 17 4 12"/></svg>Salvar'; }
+  } catch(e) { alert('Erro de conexão.'); btn.disabled = false; btn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" width="13" height="13" style="flex-shrink:0"><polyline points="20 6 9 17 4 12"/></svg>Salvar'; }
 }
  
 // --- Start inline block/unblock confirmation ---
