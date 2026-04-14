@@ -791,11 +791,11 @@ function renderAdminBookings(bookings) {
   }
  
   const upcomingHTML = upcoming.length
-    ? `<p style="font-size:10px;letter-spacing:0.12em;text-transform:uppercase;color:var(--brand);margin-bottom:8px;">Próximos</p>` + upcoming.map(b => renderRow(b, false)).join('')
+    ? `<p style="font-size:10px;letter-spacing:0.12em;text-transform:uppercase;color:var(--brand);margin-bottom:8px;">Próximos (${upcoming.length})</p>` + upcoming.map(b => renderRow(b, false)).join('')
     : '';
  
   const pastHTML = past.length
-    ? `<p style="font-size:10px;letter-spacing:0.12em;text-transform:uppercase;color:var(--muted);margin-top:16px;margin-bottom:8px;">Anteriores</p>` + past.map(b => renderRow(b, true)).join('')
+    ? `<p style="font-size:10px;letter-spacing:0.12em;text-transform:uppercase;color:var(--muted);margin-top:16px;margin-bottom:8px;">Anteriores (${past.length})</p>` + past.map(b => renderRow(b, true)).join('')
     : '';
  
   el.innerHTML = upcomingHTML + pastHTML;
