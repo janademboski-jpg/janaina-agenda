@@ -772,11 +772,11 @@ function renderAdminBookings(bookings) {
     <div class="booking-row" style="${rowStyle}">
       <div class="booking-slot-id">${b.slotId || '—'}${pastBadge}</div>
       <div class="booking-details">
-        <strong>${b.name || '—'}</strong><br/>
-        <svg class="detail-icon" viewBox="0 0 24 24" fill="none" width="13" height="13" stroke="#a07d73" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.61 3.38 2 2 0 0 1 3.58 1h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 8.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>${b.whatsapp || '—'}<br/>
-        <svg class="detail-icon" viewBox="0 0 24 24" fill="none" width="13" height="13" stroke="#a07d73" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>${b.email || '—'}<br/>
-        ${b.tipo    ? `${tipoIcon} ${b.tipo}<br/>` : ''}
-        ${b.message ? `<svg class="detail-icon" viewBox="0 0 24 24" fill="none" width="13" height="13" stroke="#a07d73" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>${b.message}<br/>` : ''}
+        <strong>${b.name || '—'}</strong>
+        <span class="detail-line"><svg class="detail-icon" viewBox="0 0 24 24" fill="none" width="13" height="13" stroke="#a07d73" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.61 3.38 2 2 0 0 1 3.58 1h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 8.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>${b.whatsapp || '—'}</span>
+        <span class="detail-line"><svg class="detail-icon" viewBox="0 0 24 24" fill="none" width="13" height="13" stroke="#a07d73" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>${b.email || '—'}</span>
+        ${b.tipo    ? `<span class="detail-line">${tipoIcon} ${b.tipo}</span>` : ''}
+        ${b.message ? `<span class="detail-line"><svg class="detail-icon" viewBox="0 0 24 24" fill="none" width="13" height="13" stroke="#a07d73" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>${b.message}</span>` : ''}
         <span style="font-size:11px;color:var(--muted);">${formatTimestamp(b.timestamp || '')}</span>
       </div>
     </div>`;

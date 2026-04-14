@@ -1392,6 +1392,14 @@ body {
   transition : color 0.3s;
 }
 
+.detail-line {
+  display    : flex;
+  align-items: center;
+  gap        : 5px;
+  margin-bottom: 2px;
+  font-size  : 13px;
+}
+
 .booking-details strong {
   color      : var(--text);
   font-weight: 500;
