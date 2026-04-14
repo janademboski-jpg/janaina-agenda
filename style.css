@@ -1513,8 +1513,13 @@ body {
    INLINE SVG ICONS — booking details + button icons
    ============================================================ */
 .detail-icon {
+  display        : inline-block;
   width          : 13px;
   height         : 13px;
+  min-width      : 13px;
+  min-height     : 13px;
+  max-width      : 13px;
+  max-height     : 13px;
   vertical-align : middle;
   margin-right   : 4px;
   stroke         : var(--muted);
@@ -1523,11 +1528,15 @@ body {
   stroke-linejoin: round;
   fill           : none;
   flex-shrink    : 0;
+  overflow       : visible;
 }
 
 .btn-icon-svg {
+  display        : inline-block;
   width          : 13px;
   height         : 13px;
+  min-width      : 13px;
+  max-width      : 13px;
   vertical-align : middle;
   margin-right   : 4px;
   stroke         : currentColor;
