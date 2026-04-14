@@ -833,7 +833,16 @@ async function addSlot() {
  
   // --- Check for duplicate slot (same date + time) ---
   const time = formatTimeDisplay(timeVal);
-  const duplicate = slots.find(s => s.date === date && s.time === time);
+  const selectedDateObj = parseDate(date);
+  const duplicate = slots.find(s => {
+    const slotDateObj = parseDate(s.date);
+    const sameDate = selectedDateObj && slotDateObj &&
+      selectedDateObj.getFullYear() === slotDateObj.getFullYear() &&
+      selectedDateObj.getMonth()    === slotDateObj.getMonth() &&
+      selectedDateObj.getDate()     === slotDateObj.getDate();
+    const sameTime = s.time.trim().toLowerCase() === time.trim().toLowerCase();
+    return sameDate && sameTime;
+  });
   if (duplicate) {
     showMsg(msgEl, 'error', 'Já existe um horário cadastrado para esta data e hora.');
     return;
