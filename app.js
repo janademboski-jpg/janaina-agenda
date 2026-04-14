@@ -746,9 +746,8 @@ function renderAdminBookings(bookings) {
   // --- Update tab badge count ---
   const tab = document.getElementById('tabAgendamentos');
   if (tab) {
-    tab.textContent = bookings.length > 0
-      ? `👥 Agendamentos (${bookings.length})`
-      : '👥 Agendamentos';
+    const count = bookings.length > 0 ? ` (${bookings.length})` : '';
+    tab.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="width:14px;height:14px;flex-shrink:0"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg> Agendamentos${count}`;
   }
   if (!bookings.length) {
     el.innerHTML = '<p style="font-size:13px;color:var(--muted);font-weight:300;">Nenhum agendamento ainda.</p>';
