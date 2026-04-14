@@ -426,7 +426,8 @@
   border-color: var(--brand);
   border-width: 2px;
   background  : var(--brand-subtle);
-  box-shadow  : 0 0 0 3px rgba(107, 90, 158, 0.25);
+  box-shadow  : 0 0 0 3px rgba(160, 106, 90, 0.25);
+  transform   : translateY(-1px);
 }
 
 /* --- Dark theme selected gets brighter glow --- */
@@ -493,6 +494,9 @@
   box-shadow   : var(--shadow-md);
   animation    : fadeUp 0.4s ease both;
   transition   : background 0.35s, border-color 0.35s, box-shadow 0.35s;
+  overflow     : hidden;
+  width        : 100%;
+  box-sizing   : border-box;
 }
 
 .form-title {
@@ -526,7 +530,7 @@
 
 .fields-row {
   display              : grid;
-  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap                  : 16px;
   margin-bottom        : 20px;
 }
@@ -554,6 +558,8 @@
   background   : var(--surface);
   outline      : none;
   transition   : border-color 0.2s, background 0.35s, color 0.3s;
+  width        : 100%;
+  box-sizing   : border-box;
 }
 
 .field input:focus {
@@ -666,7 +672,7 @@
 .field-full textarea {
   width        : 100%;
   padding      : 11px 14px;
-  border       : 1.5px solid var(--border);
+  border       : 1.5px solid var(--border-strong);
   border-radius: 8px;
   font-family  : 'Inter', sans-serif;
   font-size    : 14px;
@@ -675,6 +681,7 @@
   background   : var(--surface);
   outline      : none;
   resize       : none;
+  box-sizing   : border-box;
   min-height   : 80px;
   transition   : border-color 0.2s, background 0.35s, color 0.3s;
   line-height  : 1.5;
