@@ -767,10 +767,18 @@ function renderAdminBookings(bookings) {
       ? (b.tipo.includes('Online') ? '<svg class="detail-icon" viewBox="0 0 24 24" fill="none" width="13" height="13" stroke="#A06A5A" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>' : '<svg class="detail-icon" viewBox="0 0 24 24" fill="none" width="13" height="13" stroke="#A06A5A" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 6-8 12-8 12S4 16 4 10a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>')
       : '';
     const rowStyle = isPast ? 'opacity:0.5;' : '';
-    const pastBadge = isPast ? '<span style="font-size:10px;letter-spacing:0.08em;text-transform:uppercase;color:var(--muted);margin-left:6px;">passado</span>' : '';
+    const pastBadge = isPast ? '<span style="font-size:10px;letter-spacing:0.08em;text-transform:uppercase;color:var(--muted);display:block;margin-top:2px;">passado</span>' : '';
+    // --- Format slotId: "2026-04-16-20h" → date "16/04/2026" + time "20h" ---
+    const slotParts = (b.slotId || '').match(/^(\d{4})-(\d{2})-(\d{2})-(.+)$/);
+    const slotDate  = slotParts ? `${slotParts[3]}/${slotParts[2]}/${slotParts[1]}` : (b.slotId || '—');
+    const slotTime  = slotParts ? slotParts[4] : '';
     return `
     <div class="booking-row" style="${rowStyle}">
-      <div class="booking-slot-id">${b.slotId || '—'}${pastBadge}</div>
+      <div class="booking-slot-id">
+        <span style="display:block;font-weight:500;">${slotDate}</span>
+        ${slotTime ? `<span style="display:block;font-size:11px;color:var(--muted);margin-top:1px;">${slotTime}</span>` : ''}
+        ${pastBadge}
+      </div>
       <div class="booking-details">
         <strong>${b.name || '—'}</strong>
         <span class="detail-line"><svg class="detail-icon" viewBox="0 0 24 24" fill="none" width="13" height="13" stroke="#a07d73" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.61 3.38 2 2 0 0 1 3.58 1h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 8.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>${b.whatsapp || '—'}</span>

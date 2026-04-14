@@ -1384,6 +1384,8 @@ body {
   font-size  : 12px;
   padding-top: 2px;
   transition : color 0.3s;
+  line-height: 1.5;
+  min-width  : 90px;
 }
 
 .booking-details {
