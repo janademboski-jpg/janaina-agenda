@@ -753,25 +753,44 @@ function renderAdminBookings(bookings) {
     el.innerHTML = '<p style="font-size:13px;color:var(--muted);font-weight:300;">Nenhum agendamento ainda.</p>';
     return;
   }
-  // --- Newest first ---
-  const sorted = [...bookings].reverse();
-  el.innerHTML = sorted.map(b => {
+  // --- Split into upcoming and past ---
+  const today = new Date(); today.setHours(0,0,0,0);
+  const upcoming = bookings.filter(b => { const d = parseDate(b.slotId); return d && d >= today; });
+  const past     = bookings.filter(b => { const d = parseDate(b.slotId); return !d || d < today; });
+ 
+  // --- Upcoming: soonest first. Past: newest first ---
+  upcoming.sort((a,b) => parseDate(a.slotId) - parseDate(b.slotId));
+  past.sort((a,b) => parseDate(b.slotId) - parseDate(a.slotId));
+ 
+  function renderRow(b, isPast) {
     const tipoIcon = b.tipo
-      ? (b.tipo.includes('Online') ? '<svg class="detail-icon" viewBox="0 0 24 24" fill="none" width="13" height="13"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>' : '<svg class="detail-icon" viewBox="0 0 24 24" fill="none" width="13" height="13"><path d="M20 10c0 6-8 12-8 12S4 16 4 10a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>')
+      ? (b.tipo.includes('Online') ? '<svg class="detail-icon" viewBox="0 0 24 24" fill="none" width="13" height="13" stroke="#A06A5A" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>' : '<svg class="detail-icon" viewBox="0 0 24 24" fill="none" width="13" height="13" stroke="#A06A5A" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 6-8 12-8 12S4 16 4 10a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>')
       : '';
+    const rowStyle = isPast ? 'opacity:0.5;' : '';
+    const pastBadge = isPast ? '<span style="font-size:10px;letter-spacing:0.08em;text-transform:uppercase;color:var(--muted);margin-left:6px;">passado</span>' : '';
     return `
-    <div class="booking-row">
-      <div class="booking-slot-id">${b.slotId || '—'}</div>
+    <div class="booking-row" style="${rowStyle}">
+      <div class="booking-slot-id">${b.slotId || '—'}${pastBadge}</div>
       <div class="booking-details">
         <strong>${b.name || '—'}</strong><br/>
-        <svg class="detail-icon" viewBox="0 0 24 24" fill="none" width="13" height="13"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.61 3.38 2 2 0 0 1 3.58 1h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 8.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>${b.whatsapp || '—'}<br/>
-        <svg class="detail-icon" viewBox="0 0 24 24" fill="none" width="13" height="13"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>${b.email || '—'}<br/>
-        ${b.tipo     ? `${tipoIcon} ${b.tipo}<br/>`       : ''}
-        ${b.message  ? `<svg class="detail-icon" viewBox="0 0 24 24" fill="none" width="13" height="13"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>${b.message}<br/>`             : ''}
+        <svg class="detail-icon" viewBox="0 0 24 24" fill="none" width="13" height="13" stroke="#a07d73" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.61 3.38 2 2 0 0 1 3.58 1h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 8.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>${b.whatsapp || '—'}<br/>
+        <svg class="detail-icon" viewBox="0 0 24 24" fill="none" width="13" height="13" stroke="#a07d73" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>${b.email || '—'}<br/>
+        ${b.tipo    ? `${tipoIcon} ${b.tipo}<br/>` : ''}
+        ${b.message ? `<svg class="detail-icon" viewBox="0 0 24 24" fill="none" width="13" height="13" stroke="#a07d73" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>${b.message}<br/>` : ''}
         <span style="font-size:11px;color:var(--muted);">${formatTimestamp(b.timestamp || '')}</span>
       </div>
     </div>`;
-  }).join('');
+  }
+ 
+  const upcomingHTML = upcoming.length
+    ? `<p style="font-size:10px;letter-spacing:0.12em;text-transform:uppercase;color:var(--brand);margin-bottom:8px;">Próximos</p>` + upcoming.map(b => renderRow(b, false)).join('')
+    : '';
+ 
+  const pastHTML = past.length
+    ? `<p style="font-size:10px;letter-spacing:0.12em;text-transform:uppercase;color:var(--muted);margin-top:16px;margin-bottom:8px;">Anteriores</p>` + past.map(b => renderRow(b, true)).join('')
+    : '';
+ 
+  el.innerHTML = upcomingHTML + pastHTML;
 }
  
 async function toggleSlotStatus(id, currentStatus) {
