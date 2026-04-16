@@ -708,13 +708,23 @@ function updateManualPreview() {
     preview.innerHTML = '<span style="font-size:11px;">Selecione os dias e o horário</span>';
     btn.disabled = true; btn.style.opacity = '0.5'; return;
   }
+  // --- Fix 3: removable tags with × ---
   const tags = Array.from(selected).map(el => {
     const d = parseDate(el.dataset.date);
-    return `<span style="background:#f7efed;border:0.5px solid #e4d0ca;border-radius:4px;padding:3px 8px;font-size:11px;color:#855447;">${el.dataset.day} ${d.getDate()}/${String(d.getMonth()+1).padStart(2,'0')} · ${timeLbl}</span>`;
+    const dateStr = el.dataset.date;
+    return `<span style="display:inline-flex;align-items:center;gap:4px;background:#f7efed;border:0.5px solid #e4d0ca;border-radius:4px;padding:3px 6px 3px 8px;font-size:11px;color:#855447;">
+      ${el.dataset.day} ${d.getDate()}/${String(d.getMonth()+1).padStart(2,'0')} · ${timeLbl}
+      <span onclick="removeManualDay('${dateStr}')" style="cursor:pointer;font-size:13px;line-height:1;color:#a06a5a;margin-left:2px;">×</span>
+    </span>`;
   }).join('');
   preview.innerHTML = tags;
   btn.disabled = false; btn.style.opacity = '1';
   btn.textContent = `+ Reservar ${selected.length} horário${selected.length>1?'s':''} ${name ? 'para '+name.split(' ')[0] : ''}`;
+}
+ 
+function removeManualDay(dateStr) {
+  const btn = document.querySelector(`#manualDaysGrid .bulk-day-btn[data-date="${dateStr}"]`);
+  if (btn) { btn.classList.remove('bulk-selected'); updateManualPreview(); }
 }
  
 async function addManualBooking() {
@@ -735,7 +745,8 @@ async function addManualBooking() {
     return;
   }
  
-  btn.disabled = true; btn.textContent = 'Reservando...';
+  // --- Fix 2: grey out button while processing ---
+  btn.disabled = true; btn.style.opacity = '0.6'; btn.textContent = 'Reservando...';
  
   let added = 0;
   for (const el of selected) {
@@ -744,9 +755,16 @@ async function addManualBooking() {
     const timeClean = timeVal.replace(':','h').replace('h00','h');
     const slotId    = `${dateVal}-${timeClean}`;
     try {
+      // --- Fix 1: if slot doesn't exist yet, create it first ---
+      const existingSlot = slots.find(s => s.id === slotId);
+      if (!existingSlot) {
+        const addData = await api({ action: 'adminAddSlot', password: adminPass, id: slotId, day: dayName, time: timeLbl, date: dateVal });
+        if (addData.success) {
+          slots.push({ id: slotId, day: dayName, time: timeLbl, date: dateVal, status: 'available' });
+        }
+      }
       const data = await api({ action: 'bookSlot', slotId, name, whatsapp, email, tipo, message: msg, sendEmail });
       if (data.success) {
-        // Update slot status locally
         const slot = slots.find(s => s.id === slotId);
         if (slot) slot.status = 'booked';
         bookings.push({ slotId, name, whatsapp, email, tipo, message: msg, timestamp: new Date().toLocaleString('pt-BR') });
@@ -759,7 +777,6 @@ async function addManualBooking() {
     renderCalendar();
     renderAdminSlots();
     renderAdminBookings(bookings);
-    // Reset form
     ['manualName','manualWhatsapp','manualEmail','manualMsg'].forEach(id => { const el = document.getElementById(id); if(el) el.value=''; });
     document.getElementById('manualTipo').value = '';
     document.getElementById('manualSlotTime').value = '';
@@ -769,7 +786,7 @@ async function addManualBooking() {
   } else {
     showMsg(msgEl, 'error', 'Erro ao reservar. Verifique os horários e tente novamente.');
   }
-  btn.disabled = false;
+  btn.disabled = false; btn.style.opacity = '1';
 }
  
  
