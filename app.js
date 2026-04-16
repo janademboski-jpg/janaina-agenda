@@ -722,7 +722,7 @@ function renderAdminSlots() {
       : `${slot.day} · ${slot.time}`;
     // --- Look up first name from bookings if slot is booked ---
     const patientName = slot.status === 'booked'
-      ? (() => { const b = bookings.find(b => b.slotId === slot.id); return b ? b.name.split(' ')[0] : ''; })()
+      ? (() => { const b = bookings.find(b => b.slotId === slot.id); return b ? b.name : ''; })()
       : '';
     return `
       <div class="admin-slot-row" id="row-${slot.id}">
