@@ -1107,11 +1107,17 @@ function renderAdminBookings(data) {
   // --- Update tab badge count ---
   const tab = document.getElementById('tabAgendamentos');
   if (tab) {
-    const count = bookings.length > 0 ? ` (${bookings.length})` : '';
+    const today2 = new Date(); today2.setHours(0,0,0,0);
+    const upcomingCount = bookings.filter(b => { const d = parseDate(b.slotId); return d && d >= today2; }).length;
+    const count = upcomingCount > 0 ? ` (${upcomingCount})` : '';
     tab.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="width:14px;height:14px;flex-shrink:0"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg> Agendamentos${count}`;
   }
   if (!bookings.length) {
-    el.innerHTML = '<p style="font-size:13px;color:var(--muted);font-weight:300;">Nenhum agendamento ainda.</p>';
+    el.innerHTML = `
+      <p style="font-size:11px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:var(--brand);margin-bottom:6px;">Próximos (0)</p>
+      <p style="font-size:13px;color:var(--muted);margin-bottom:20px;">Nenhuma sessão agendada por enquanto.</p>
+      <p style="font-size:11px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:var(--muted);margin-bottom:6px;">Anteriores (0)</p>
+      <p style="font-size:13px;color:var(--muted);">Nenhum atendimento anterior.</p>`;
     return;
   }
   // --- Split into upcoming and past ---
@@ -1151,13 +1157,17 @@ function renderAdminBookings(data) {
     </div>`;
   }
 
-  const upcomingHTML = upcoming.length
-    ? `<p style="font-size:10px;letter-spacing:0.12em;text-transform:uppercase;color:var(--brand);margin-bottom:8px;">Próximos (${upcoming.length})</p>` + upcoming.map(b => renderRow(b, false)).join('')
-    : '';
+  const upcomingHTML =
+    `<p style="font-size:11px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:var(--brand);margin-bottom:8px;">Próximos (${upcoming.length})</p>` +
+    (upcoming.length
+      ? upcoming.map(b => renderRow(b, false)).join('')
+      : '<p style="font-size:13px;color:var(--muted);margin-bottom:16px;">Nenhuma sessão agendada por enquanto.</p>');
 
-  const pastHTML = past.length
-    ? `<p style="font-size:10px;letter-spacing:0.12em;text-transform:uppercase;color:var(--muted);margin-top:16px;margin-bottom:8px;">Anteriores (${past.length})</p>` + past.map(b => renderRow(b, true)).join('')
-    : '';
+  const pastHTML =
+    `<p style="font-size:11px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:var(--muted);margin-top:16px;margin-bottom:8px;">Anteriores (${past.length})</p>` +
+    (past.length
+      ? past.map(b => renderRow(b, true)).join('')
+      : '<p style="font-size:13px;color:var(--muted);">Nenhum atendimento anterior.</p>');
 
   el.innerHTML = upcomingHTML + pastHTML;
 }
