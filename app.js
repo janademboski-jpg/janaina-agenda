@@ -24,12 +24,23 @@ async function api(params) {
  
 // --- Fix 2: Restore admin session on page load ---
 function restoreAdminSession() {
-  if (!adminPass) return;
+  const skeletonEl = document.getElementById('adminSkeleton');
+  const loginEl    = document.getElementById('adminLogin');
+  const contentEl  = document.getElementById('adminContent');
+ 
+  if (!adminPass) {
+    // Not logged in — hide skeleton, show login
+    if (skeletonEl) skeletonEl.style.display = 'none';
+    if (loginEl)    loginEl.style.display    = 'block';
+    return;
+  }
+ 
+  // Has saved session — keep skeleton, hide login while we verify
+  if (loginEl)    loginEl.style.display    = 'none';
+ 
   api({ action: 'adminGetBookings', password: adminPass }).then(data => {
+    if (skeletonEl) skeletonEl.style.display = 'none';
     if (data.success) {
-      const loginEl   = document.getElementById('adminLogin');
-      const contentEl = document.getElementById('adminContent');
-      if (loginEl)   loginEl.style.display   = 'none';
       if (contentEl) contentEl.style.display = 'block';
       const panel = document.getElementById('adminPanel');
       if (panel) {
@@ -37,13 +48,16 @@ function restoreAdminSession() {
         if (wasOpen) panel.classList.add('open');
       }
       renderAdminBookings(data.bookings);
-      renderAdminSlots();
     } else {
       sessionStorage.removeItem('jana-admin-pass');
       sessionStorage.removeItem('jana-admin-open');
       adminPass = '';
+      if (loginEl) loginEl.style.display = 'block';
     }
-  }).catch(() => {});
+  }).catch(() => {
+    if (skeletonEl) skeletonEl.style.display = 'none';
+    if (loginEl)    loginEl.style.display    = 'block';
+  });
 }
  
 // --- Populate time dropdown with 15min intervals ---
@@ -666,7 +680,6 @@ function toggleAdmin() {
         document.getElementById('adminLogin').style.display   = 'none';
         document.getElementById('adminContent').style.display = 'block';
         renderAdminBookings(data.bookings);
-        renderAdminSlots();
       }
     }).catch(() => {});
   }
@@ -685,7 +698,6 @@ async function adminAuth() {
       document.getElementById('adminLogin').style.display   = 'none';
       document.getElementById('adminContent').style.display = 'block';
       renderAdminBookings(data.bookings);
-      renderAdminSlots();
     } else { showMsg(msgEl, 'error', 'Senha incorreta.'); }
   } catch(e) { showMsg(msgEl, 'error', 'Erro de conexão.'); }
 }

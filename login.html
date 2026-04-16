@@ -67,13 +67,23 @@
     <div class="admin-panel-page">
       <div class="panel-title">Painel da Janaína</div>
 
-      <div id="adminLogin">
+      <div id="adminLogin" style="display:none;">
         <div class="admin-login">
           <input type="password" id="adminPassword" placeholder="Senha"
             onkeyup="if(event.key==='Enter') adminAuth();"/>
           <button class="btn-small" onclick="adminAuth()">Entrar</button>
         </div>
         <div class="message" id="adminLoginMsg"></div>
+      </div>
+
+      <!-- Skeleton shown while restoring session -->
+      <div id="adminSkeleton">
+        <div style="display:flex;flex-direction:column;gap:12px;margin-top:8px;">
+          <div class="skeleton" style="height:40px;border-radius:5px;width:100%;"></div>
+          <div class="skeleton" style="height:40px;border-radius:5px;width:100%;"></div>
+          <div class="skeleton" style="height:40px;border-radius:5px;width:85%;"></div>
+          <div class="skeleton" style="height:40px;border-radius:5px;width:90%;"></div>
+        </div>
       </div>
 
       <div id="adminContent" style="display:none;">
