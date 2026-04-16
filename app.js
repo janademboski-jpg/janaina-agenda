@@ -302,8 +302,8 @@ async function loadSlots() {
   } catch(e) {
     const skeleton = document.getElementById('skeletonLoader');
     if (skeleton) skeleton.style.display = 'none';
-    document.getElementById('calendarContainer').innerHTML =
-      `<div class="empty-state">Não foi possível carregar os horários. Tente novamente.</div>`;
+    const cc = document.getElementById('calendarContainer');
+    if (cc) cc.innerHTML = `<div class="empty-state">Não foi possível carregar os horários. <button onclick="loadSlots()" style="background:none;border:none;color:var(--brand);cursor:pointer;font-size:13px;text-decoration:underline;">Tentar novamente</button></div>`;
   }
 }
  
@@ -453,7 +453,7 @@ function checkCancelToken() {
   if (!cancelToken) return;
  
   // --- Show cancel screen, hide everything else ---
-  document.getElementById('calendarContainer').style.display = 'none';
+  const calEl = document.getElementById('calendarContainer'); if (calEl) calEl.style.display = 'none';
   document.getElementById('cancelScreen').style.display      = 'block';
  
   // --- Store token for confirmation ---
@@ -920,7 +920,7 @@ function formatTimestamp(ts) {
  
 function renderAdminBookings(data) {
   bookings = data || [];
-  renderAdminSlots();
+  if (document.getElementById('adminSlotsList')) renderAdminSlots();
   const el = document.getElementById('adminBookingsList');
   // --- Update tab badge count ---
   const tab = document.getElementById('tabAgendamentos');

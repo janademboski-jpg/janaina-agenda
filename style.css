@@ -1557,18 +1557,19 @@ body {
 
   /* --- Admin slot row: label on top, actions below --- */
   .admin-slot-row {
-    flex-direction: column;
-    align-items   : flex-start;
-    gap           : 8px;
+    flex-wrap     : wrap;
+    gap           : 6px;
   }
 
   .admin-slot-label {
-    width: 100%;
+    flex  : 1;
+    min-width: 60%;
   }
 
   .admin-slot-actions {
     width          : 100%;
     justify-content: flex-start;
+    flex-wrap      : wrap;
   }
 
   /* --- Booking row: stack vertically --- */
