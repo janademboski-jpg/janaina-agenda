@@ -294,7 +294,8 @@ async function loadSlots() {
     if (skeleton) skeleton.style.display = 'none';
     renderCalendar();
     // --- Re-render admin slots if already logged in ---
-    if (adminPass && document.getElementById('adminContent').style.display === 'block') {
+    const adminContentEl = document.getElementById('adminContent');
+    if (adminPass && adminContentEl && adminContentEl.style.display === 'block') {
       renderAdminSlots();
     }
   } catch(e) {
