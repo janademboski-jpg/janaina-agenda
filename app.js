@@ -641,23 +641,138 @@ async function submitBooking() {
  
 // --- Switch admin tabs ---
 function switchTab(tab) {
-  const horarios      = document.getElementById('tabContentHorarios');
-  const agendamentos  = document.getElementById('tabContentAgendamentos');
-  const tabHorarios   = document.getElementById('tabHorarios');
-  const tabAgend      = document.getElementById('tabAgendamentos');
- 
-  if (tab === 'horarios') {
-    horarios.style.display     = 'block';
-    agendamentos.style.display = 'none';
-    tabHorarios.classList.add('active');
-    tabAgend.classList.remove('active');
-  } else {
-    horarios.style.display     = 'none';
-    agendamentos.style.display = 'block';
-    tabHorarios.classList.remove('active');
-    tabAgend.classList.add('active');
-  }
+  const tabs = ['horarios','agendamentos','reservar'];
+  tabs.forEach(t => {
+    const content = document.getElementById(`tabContent${t.charAt(0).toUpperCase()+t.slice(1)}`);
+    const btn     = document.getElementById(`tab${t.charAt(0).toUpperCase()+t.slice(1)}`);
+    if (content) content.style.display = t === tab ? 'block' : 'none';
+    if (btn) btn.classList.toggle('active', t === tab);
+  });
+  if (tab === 'reservar') initManualWeek();
 }
+ 
+// ----- Manual booking -----
+let manualWeekStart = null;
+ 
+function initManualWeek() {
+  if (!manualWeekStart) manualWeekStart = getMonday(new Date());
+  // Populate time dropdown
+  const sel = document.getElementById('manualSlotTime');
+  if (sel && sel.options.length <= 1) {
+    for (let h = 6; h < 23; h++) {
+      for (let m = 0; m < 60; m += 15) {
+        const hh = String(h).padStart(2,'0'), mm = String(m).padStart(2,'0');
+        sel.innerHTML += `<option value="${hh}:${mm}">${hh}h${mm==='00'?'':mm}</option>`;
+      }
+    }
+  }
+  renderManualGrid();
+}
+ 
+function manualPrevWeek() { manualWeekStart.setDate(manualWeekStart.getDate()-7); renderManualGrid(); }
+function manualNextWeek() { manualWeekStart.setDate(manualWeekStart.getDate()+7); renderManualGrid(); }
+ 
+function renderManualGrid() {
+  const grid  = document.getElementById('manualDaysGrid');
+  const label = document.getElementById('manualWeekLabel');
+  if (!grid) return;
+  const endDate = new Date(manualWeekStart); endDate.setDate(endDate.getDate()+5);
+  const fmt = d => `${d.getDate()} ${MONTHS[d.getMonth()].substring(0,3)}`;
+  label.textContent = `${fmt(manualWeekStart)} – ${fmt(endDate)} de ${manualWeekStart.getFullYear()}`;
+  grid.innerHTML = '';
+  const today = new Date(); today.setHours(0,0,0,0);
+  for (let i = 0; i < 6; i++) {
+    const day = new Date(manualWeekStart); day.setDate(day.getDate()+i);
+    const isPast = day < today;
+    const yyyy = day.getFullYear(), mm = String(day.getMonth()+1).padStart(2,'0'), dd = String(day.getDate()).padStart(2,'0');
+    const dateStr = `${yyyy}-${mm}-${dd}`;
+    const btn = document.createElement('div');
+    btn.className = 'bulk-day-btn' + (isPast ? ' bulk-past' : '');
+    btn.dataset.date = dateStr;
+    btn.dataset.day  = DAYS_FULL[day.getDay()].split('-')[0];
+    btn.innerHTML = `<span class="bulk-abbr">${DAY_ABBR[day.getDay()]}</span><span class="bulk-num">${day.getDate()}</span>`;
+    if (!isPast) btn.onclick = () => { btn.classList.toggle('bulk-selected'); updateManualPreview(); };
+    grid.appendChild(btn);
+  }
+  updateManualPreview();
+}
+ 
+function updateManualPreview() {
+  const preview  = document.getElementById('manualPreview');
+  const btn      = document.getElementById('manualBookBtn');
+  const timeVal  = document.getElementById('manualSlotTime').value;
+  const timeLbl  = formatTimeDisplay(timeVal);
+  const selected = document.querySelectorAll('#manualDaysGrid .bulk-day-btn.bulk-selected');
+  const name     = document.getElementById('manualName').value.trim();
+  if (!selected.length || !timeVal) {
+    preview.innerHTML = '<span style="font-size:11px;">Selecione os dias e o horário</span>';
+    btn.disabled = true; btn.style.opacity = '0.5'; return;
+  }
+  const tags = Array.from(selected).map(el => {
+    const d = parseDate(el.dataset.date);
+    return `<span style="background:#f7efed;border:0.5px solid #e4d0ca;border-radius:4px;padding:3px 8px;font-size:11px;color:#855447;">${el.dataset.day} ${d.getDate()}/${String(d.getMonth()+1).padStart(2,'0')} · ${timeLbl}</span>`;
+  }).join('');
+  preview.innerHTML = tags;
+  btn.disabled = false; btn.style.opacity = '1';
+  btn.textContent = `+ Reservar ${selected.length} horário${selected.length>1?'s':''} ${name ? 'para '+name.split(' ')[0] : ''}`;
+}
+ 
+async function addManualBooking() {
+  const name      = document.getElementById('manualName').value.trim();
+  const whatsapp  = document.getElementById('manualWhatsapp').value.trim();
+  const email     = document.getElementById('manualEmail').value.trim();
+  const tipo      = document.getElementById('manualTipo').value;
+  const msg       = document.getElementById('manualMsg').value.trim();
+  const timeVal   = document.getElementById('manualSlotTime').value;
+  const timeLbl   = formatTimeDisplay(timeVal);
+  const sendEmail = document.getElementById('manualSendEmail').checked;
+  const selected  = Array.from(document.querySelectorAll('#manualDaysGrid .bulk-day-btn.bulk-selected'));
+  const msgEl     = document.getElementById('manualBookMsg');
+  const btn       = document.getElementById('manualBookBtn');
+ 
+  if (!name || !whatsapp || !tipo || !timeVal || !selected.length) {
+    showMsg(msgEl, 'error', 'Preencha nome, WhatsApp, tipo e selecione pelo menos um horário.');
+    return;
+  }
+ 
+  btn.disabled = true; btn.textContent = 'Reservando...';
+ 
+  let added = 0;
+  for (const el of selected) {
+    const dateVal   = el.dataset.date;
+    const dayName   = el.dataset.day;
+    const timeClean = timeVal.replace(':','h').replace('h00','h');
+    const slotId    = `${dateVal}-${timeClean}`;
+    try {
+      const data = await api({ action: 'bookSlot', slotId, name, whatsapp, email, tipo, message: msg, sendEmail });
+      if (data.success) {
+        // Update slot status locally
+        const slot = slots.find(s => s.id === slotId);
+        if (slot) slot.status = 'booked';
+        bookings.push({ slotId, name, whatsapp, email, tipo, message: msg, timestamp: new Date().toLocaleString('pt-BR') });
+        added++;
+      }
+    } catch(e) {}
+  }
+ 
+  if (added > 0) {
+    renderCalendar();
+    renderAdminSlots();
+    renderAdminBookings(bookings);
+    // Reset form
+    ['manualName','manualWhatsapp','manualEmail','manualMsg'].forEach(id => { const el = document.getElementById(id); if(el) el.value=''; });
+    document.getElementById('manualTipo').value = '';
+    document.getElementById('manualSlotTime').value = '';
+    document.querySelectorAll('#manualDaysGrid .bulk-day-btn.bulk-selected').forEach(b => b.classList.remove('bulk-selected'));
+    updateManualPreview();
+    showMsg(msgEl, 'success', `${added} horário${added>1?'s reservados':' reservado'} com sucesso!`);
+  } else {
+    showMsg(msgEl, 'error', 'Erro ao reservar. Verifique os horários e tente novamente.');
+  }
+  btn.disabled = false;
+}
+ 
+ 
  
 // --- Admin ---
 function toggleAdmin() {

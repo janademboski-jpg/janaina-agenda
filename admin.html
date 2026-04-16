@@ -96,6 +96,10 @@
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
             Agendamentos
           </button>
+          <button class="admin-tab" id="tabReservar" onclick="switchTab('reservar')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg>
+            Reservar
+          </button>
         </div>
 
         <!-- Tab: Horários -->
@@ -158,6 +162,81 @@
             </div>
           </div>
         </div>
+
+        <!-- Tab: Reservar manualmente -->
+        <div id="tabContentReservar" style="display:none;">
+          <div style="margin-top:16px;">
+            <div class="section-label" style="margin-bottom:16px;">Reservar para paciente</div>
+
+            <div class="add-slot-inputs" style="margin-bottom:10px;">
+              <div class="add-slot-field">
+                <label class="add-slot-label">Nome completo <span class="required">*</span></label>
+                <input type="text" id="manualName" placeholder="Nome do paciente" onkeyup="updateManualPreview()"/>
+              </div>
+              <div class="add-slot-field">
+                <label class="add-slot-label">WhatsApp <span class="required">*</span></label>
+                <input type="tel" id="manualWhatsapp" placeholder="(61) 99999-9999"/>
+              </div>
+            </div>
+
+            <div class="add-slot-inputs" style="margin-bottom:10px;">
+              <div class="add-slot-field">
+                <label class="add-slot-label">E-mail</label>
+                <input type="email" id="manualEmail" placeholder="email@exemplo.com"/>
+              </div>
+              <div class="add-slot-field">
+                <label class="add-slot-label">Tipo de atendimento <span class="required">*</span></label>
+                <select id="manualTipo">
+                  <option value="">Selecione...</option>
+                  <option value="Online">Online</option>
+                  <option value="Presencial — Águas Claras">Águas Claras</option>
+                  <option value="Presencial — Plano Piloto">Plano Piloto</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="add-slot-field" style="margin-bottom:14px;">
+              <label class="add-slot-label">Observação (opcional)</label>
+              <input type="text" id="manualMsg" placeholder="Alguma informação adicional..."/>
+            </div>
+
+            <hr style="border:none;border-top:1px solid var(--border);margin-bottom:14px;">
+
+            <h4 style="margin-bottom:10px;">Selecionar horários</h4>
+
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
+              <button class="btn-admin" onclick="manualPrevWeek()" style="padding:4px 10px;">←</button>
+              <span id="manualWeekLabel" style="font-size:11px;letter-spacing:0.08em;text-transform:uppercase;color:var(--muted);"></span>
+              <button class="btn-admin" onclick="manualNextWeek()" style="padding:4px 10px;">→</button>
+            </div>
+
+            <div id="manualDaysGrid" style="display:grid;grid-template-columns:repeat(6,1fr);gap:5px;margin-bottom:12px;"></div>
+
+            <div class="add-slot-inputs" style="grid-template-columns:1fr;margin-bottom:10px;">
+              <div class="add-slot-field">
+                <label class="add-slot-label">Horário <span class="required">*</span></label>
+                <select id="manualSlotTime" onchange="updateManualPreview()">
+                  <option value="">Selecione...</option>
+                </select>
+              </div>
+            </div>
+
+            <div id="manualPreview" style="background:var(--surface-2);border-radius:5px;padding:8px 12px;font-size:12px;color:var(--muted);margin-bottom:12px;min-height:34px;display:flex;align-items:center;gap:5px;flex-wrap:wrap;">
+              <span style="font-size:11px;">Selecione os dias e o horário</span>
+            </div>
+
+            <label style="display:flex;align-items:center;gap:8px;font-size:13px;color:var(--text-2);margin-bottom:14px;cursor:pointer;">
+              <input type="checkbox" id="manualSendEmail" checked style="width:15px;height:15px;accent-color:var(--brand);"/>
+              Enviar e-mail de confirmação ao paciente
+            </label>
+
+            <button class="btn-small success-btn" id="manualBookBtn" onclick="addManualBooking()" disabled style="opacity:0.5;">
+              + Reservar horários
+            </button>
+            <div class="message" id="manualBookMsg"></div>
+          </div>
+        </div>
+
       </div>
     </div>
   </div>
