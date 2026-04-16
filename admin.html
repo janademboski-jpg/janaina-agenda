@@ -133,7 +133,7 @@
             <div class="add-slot-inputs" style="grid-template-columns:1fr;margin-bottom:10px;">
               <div class="add-slot-field">
                 <label class="add-slot-label">Horário <span class="required">*</span></label>
-                <select id="bulkSlotTime" onchange="updateBulkPreview()">
+                <select id="bulkSlotTime" onchange="document.getElementById('addSlotMsg') && (document.getElementById('addSlotMsg').style.display='none'); updateBulkPreview()">
                   <option value="">Selecione...</option>
                 </select>
               </div>

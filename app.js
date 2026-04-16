@@ -146,7 +146,12 @@ function renderBulkGrid() {
     btn.dataset.date = dateStr;
     btn.dataset.day  = DAYS_FULL[day.getDay()].split('-')[0];
     btn.innerHTML    = `<span class="bulk-abbr">${dayName}</span><span class="bulk-num">${day.getDate()}</span>`;
-    if (!isPast) btn.onclick = () => { btn.classList.toggle('bulk-selected'); updateBulkPreview(); };
+    if (!isPast) btn.onclick = () => {
+      btn.classList.toggle('bulk-selected');
+      const msg = document.getElementById('addSlotMsg');
+      if (msg) msg.style.display = 'none';
+      updateBulkPreview();
+    };
     grid.appendChild(btn);
   }
   updateBulkPreview();
@@ -230,7 +235,7 @@ async function addBulkSlots() {
     document.querySelectorAll('.bulk-day-btn.bulk-selected').forEach(b => b.classList.remove('bulk-selected'));
     document.getElementById('bulkSlotTime').value = '';
     updateBulkPreview();
-    showMsg(msgEl, 'success', `${added} horário${added > 1 ? 's adicionados' : ' adicionado'} com sucesso!`);
+    showMsg(msgEl, 'success', `${added} horário${added > 1 ? 's adicionados' : ' adicionado'} com sucesso!`); setTimeout(() => { msgEl.style.display = 'none'; }, 3000);
   } else {
     showMsg(msgEl, 'error', 'Erro ao adicionar. Tente novamente.');
   }
@@ -803,7 +808,7 @@ async function addManualBooking() {
     document.getElementById('manualSlotTime').value = '';
     document.querySelectorAll('#manualDaysGrid .bulk-day-btn.bulk-selected').forEach(b => b.classList.remove('bulk-selected'));
     updateManualPreview();
-    showMsg(msgEl, 'success', `${added} horário${added>1?'s reservados':' reservado'} com sucesso!`);
+    showMsg(msgEl, 'success', `${added} horário${added>1?'s reservados':' reservado'} com sucesso!`); setTimeout(() => { msgEl.style.display = 'none'; }, 3000);
   } else {
     showMsg(msgEl, 'error', 'Erro ao reservar. Verifique os horários e tente novamente.');
   }
