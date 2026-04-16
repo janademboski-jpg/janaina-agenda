@@ -7,6 +7,11 @@ let bookings     = [];
 let selectedSlot = null;
 let adminPass    = sessionStorage.getItem('jana-admin-pass') || ''; // Fix 2: persist session
  
+// --- Safe calendar render — skips on admin page ---
+function safeRenderCalendar() {
+  if (document.getElementById('calendarContainer')) safeRenderCalendar();
+}
+ 
 // --- Portuguese labels ---
 const MONTHS       = ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
 const MONTHS_SHORT = ['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
@@ -219,7 +224,7 @@ async function addBulkSlots() {
  
   if (added > 0) {
     slots.sort((a,b) => { const da = parseDate(a.date), db = parseDate(b.date); if (!da) return 1; if (!db) return -1; if (da-db !== 0) return da-db; return (a.time||'').localeCompare(b.time||''); });
-    renderCalendar();
+    safeRenderCalendar();
     renderAdminSlots();
     // Deselect all
     document.querySelectorAll('.bulk-day-btn.bulk-selected').forEach(b => b.classList.remove('bulk-selected'));
@@ -319,7 +324,7 @@ async function loadSlots() {
     const skeleton = document.getElementById('skeletonLoader');
     if (skeleton) skeleton.style.display = 'none';
     const isAdminPage = !document.getElementById('calendarContainer');
-    if (!isAdminPage) renderCalendar();
+    if (!isAdminPage) safeRenderCalendar();
     // --- Re-render admin slots if already logged in ---
     const adminContentEl = document.getElementById('adminContent');
     if (adminPass && adminContentEl && adminContentEl.style.display === 'block') {
@@ -452,7 +457,7 @@ function renderCalendar() {
 // --- Select slot ---
 function selectSlot(id) {
   selectedSlot = slots.find(s => s.id === id) || null;
-  renderCalendar();
+  safeRenderCalendar();
  
   const form = document.getElementById('bookingForm');
   if (selectedSlot) {
@@ -638,7 +643,7 @@ async function submitBooking() {
         });
       }
       selectedSlot = null;
-      renderCalendar();
+      safeRenderCalendar();
     } else {
       showMsg(msgEl, 'error', data.error === 'Slot already booked.'
         ? 'Este horário já foi reservado. Escolha outro.'
@@ -790,7 +795,7 @@ async function addManualBooking() {
   }
  
   if (added > 0) {
-    renderCalendar();
+    safeRenderCalendar();
     renderAdminSlots();
     renderAdminBookings(bookings);
     ['manualName','manualWhatsapp','manualEmail','manualMsg'].forEach(id => { const el = document.getElementById(id); if(el) el.value=''; });
@@ -1010,7 +1015,7 @@ async function saveEditSlot(oldId) {
     if (data.success) {
       const s = slots.find(s => s.id === oldId);
       if (s) { s.id = newId; s.day = newDay; s.time = newTime; s.date = dateVal; }
-      renderCalendar();
+      safeRenderCalendar();
       renderAdminSlots();
     } else { alert(data.error || 'Erro ao editar.'); btn.disabled = false; btn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" width="13" height="13" style="flex-shrink:0"><polyline points="20 6 9 17 4 12"/></svg>Salvar'; }
   } catch(e) { alert('Erro de conexão.'); btn.disabled = false; btn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" width="13" height="13" style="flex-shrink:0"><polyline points="20 6 9 17 4 12"/></svg>Salvar'; }
@@ -1059,13 +1064,14 @@ async function confirmDeleteSlot(id) {
     const data = await api({ action: 'adminDeleteSlot', password: adminPass, slotId: id });
     if (data.success || data.error === 'Slot not found.') {
       slots = slots.filter(s => s.id !== id);
-      renderCalendar();
+      const isAdminPage = !document.getElementById('calendarContainer');
+      if (!isAdminPage) safeRenderCalendar();
       renderAdminSlots();
     } else { alert(data.error || 'Erro ao deletar.'); btn.disabled = false; btn.textContent = 'Sim, deletar'; }
   } catch(e) {
-    // --- Connection error but action may have completed — remove locally and reload ---
     slots = slots.filter(s => s.id !== id);
-    renderCalendar();
+    const isAdminPage = !document.getElementById('calendarContainer');
+    if (!isAdminPage) safeRenderCalendar();
     renderAdminSlots();
   }
 }
@@ -1166,7 +1172,7 @@ async function toggleSlotStatus(id, currentStatus) {
     // --- Treat success OR known error responses as success since Apps Script completes the action ---
     const s = slots.find(s => s.id === id);
     if (s) s.status = newStatus;
-    renderCalendar();
+    safeRenderCalendar();
     renderAdminSlots();
   } catch(e) {
     // --- Even on network error, reload to get true state ---
@@ -1237,7 +1243,7 @@ async function addSlot() {
         if (da - db !== 0) return da - db;
         return (a.time || '').localeCompare(b.time || '');
       });
-      renderCalendar();
+      safeRenderCalendar();
       renderAdminSlots();
       document.getElementById('newSlotDate').value = '';
       document.getElementById('newSlotTime').value = '';
