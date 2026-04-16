@@ -1049,7 +1049,7 @@ async function confirmDeleteSlot(id) {
   btn.disabled = true; btn.textContent = 'Deletando...';
   try {
     const data = await api({ action: 'adminDeleteSlot', password: adminPass, slotId: id });
-    if (data.success) {
+    if (data.success || data.error === 'Slot not found.') {
       slots = slots.filter(s => s.id !== id);
       renderCalendar();
       renderAdminSlots();
