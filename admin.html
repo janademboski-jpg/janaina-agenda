@@ -217,7 +217,7 @@
             <div class="add-slot-inputs" style="grid-template-columns:1fr;margin-bottom:10px;">
               <div class="add-slot-field">
                 <label class="add-slot-label">Horário <span class="required">*</span></label>
-                <select id="manualSlotTime" onchange="document.querySelectorAll('#manualDaysGrid .bulk-day-btn.bulk-selected').forEach(b=>b.classList.remove('bulk-selected')); updateManualPreview();">
+                <select id="manualSlotTime" onchange="updateManualPreview();">
                   <option value="">Selecione...</option>
                 </select>
               </div>
