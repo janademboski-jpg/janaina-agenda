@@ -844,18 +844,32 @@ function toggleAdmin() {
 async function adminAuth() {
   const pw    = document.getElementById('adminPassword').value;
   const msgEl = document.getElementById('adminLoginMsg');
+  const btn   = document.querySelector('#adminLogin .btn-small');
+
+  if (!pw) { showMsg(msgEl, 'error', 'Digite a senha.'); return; }
+
+  btn.disabled    = true;
+  btn.textContent = 'Entrando...';
+
   try {
     const data = await api({ action: 'adminGetBookings', password: pw });
     if (data.success) {
-      // --- Fix 2: Save session so refresh doesn't log out ---
       adminPass = pw;
       sessionStorage.setItem('jana-admin-pass', pw);
       sessionStorage.setItem('jana-admin-open', 'true');
       document.getElementById('adminLogin').style.display   = 'none';
       document.getElementById('adminContent').style.display = 'block';
       renderAdminBookings(data.bookings);
-    } else { showMsg(msgEl, 'error', 'Senha incorreta.'); }
-  } catch(e) { showMsg(msgEl, 'error', 'Erro de conexão.'); }
+    } else {
+      showMsg(msgEl, 'error', 'Senha incorreta.');
+      btn.disabled    = false;
+      btn.textContent = 'Entrar';
+    }
+  } catch(e) {
+    showMsg(msgEl, 'error', 'Erro de conexão.');
+    btn.disabled    = false;
+    btn.textContent = 'Entrar';
+  }
 }
 
 function renderAdminSlots() {
